@@ -10,7 +10,7 @@ export const registerSchema = z.object({
       message: 'Password must contain at least one uppercase letter',
     })
     .regex(/[0-9]/, { message: 'Password must contain at least one digit' })
-    .regex(/[@$!%*?&]/, {
+    .regex(/[@$!%*?&#]/, {
       message: 'Password must contain at least one special character (@$!%*?&)',
     }),
   phone: z.string().regex(/^\d{10}$/, 'Phone must be 10 digits'),

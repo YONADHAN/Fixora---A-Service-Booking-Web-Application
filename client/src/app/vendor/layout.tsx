@@ -1,13 +1,12 @@
-import React from 'react'
+import type { Metadata } from 'next'
+import VendorLayout from '@/components/layout/VendorLayout'
+export const metadata: Metadata = {
+  title: 'Admin | Fixora',
+  description: 'Admin dashboard layout',
+}
 
-export default function SignupLayout({
+export default function AdminRootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  return (
-    <section className='min-h-screen flex items-center justify-center'>
-      {children}
-    </section>
-  )
+}: Readonly<{ children: React.ReactNode }>) {
+  return <VendorLayout>{children}</VendorLayout>
 }

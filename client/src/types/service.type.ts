@@ -3,7 +3,7 @@ export interface ApiResponse {
   message: string
   data?: any
 }
-export interface LoginData {
+export interface signinData {
   email: string
   password: string
   role: string

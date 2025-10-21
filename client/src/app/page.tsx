@@ -1,7 +1,7 @@
 'use client'
 
-import BannerType1 from '@/components/banners/bannerType1'
-import BannerType2 from '@/components/banners/bannerType2'
+import BannerType1 from '@/components/shared-ui/Banner/bannerType1'
+import BannerType2 from '@/components/shared-ui/Banner/bannerType2'
 
 function page() {
   return (

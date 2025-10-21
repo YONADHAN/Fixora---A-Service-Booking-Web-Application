@@ -14,7 +14,7 @@ export class VendorController {
     @inject('ICloudinaryService')
     private _cloudinaryService: ICloudinaryService
   ) {}
-
+  //controller for the vendor for uploading the identity proof
   async uploadVerificationDocument(req: Request, res: Response): Promise<void> {
     try {
       const file = req.file

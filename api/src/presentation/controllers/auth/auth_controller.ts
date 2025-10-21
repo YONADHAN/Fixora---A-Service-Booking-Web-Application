@@ -42,7 +42,8 @@ export class AuthController implements IAuthController {
     @inject('IResetPasswordUseCase')
     private _resetPasswordUseCase: IResetPasswordUseCase
   ) {}
-
+  // controller for sending otp to emails
+  // giving email as parameter
   async sendOtpEmail(req: Request, res: Response): Promise<void> {
     try {
       const { email } = req.body
@@ -55,7 +56,8 @@ export class AuthController implements IAuthController {
       handleErrorResponse(req, res, error)
     }
   }
-
+  //controller for verifying otp
+  //giving email and otp as parameters
   async verifyOtp(req: Request, res: Response): Promise<void> {
     try {
       const { email, otp } = req.body
@@ -69,7 +71,8 @@ export class AuthController implements IAuthController {
       handleErrorResponse(req, res, error)
     }
   }
-
+  //controller for registering the users
+  //giving the user data + role in body
   async register(req: Request, res: Response): Promise<void> {
     try {
       const { role } = req.body as { role: keyof typeof userSchema }
@@ -93,7 +96,8 @@ export class AuthController implements IAuthController {
       handleErrorResponse(req, res, error)
     }
   }
-
+  //controller for make the users login
+  //giving the email,password and role in body
   async login(req: Request, res: Response): Promise<void> {
     try {
       const data = req.body as LoginUserDTO
@@ -138,7 +142,8 @@ export class AuthController implements IAuthController {
       handleErrorResponse(req, res, error)
     }
   }
-
+  //controller for users to click the forgot password
+  //giving email and role in body
   async forgotPassword(req: Request, res: Response): Promise<void> {
     try {
       const validatedData = forgotPasswordValidationSchema.parse(req.body)
@@ -159,7 +164,8 @@ export class AuthController implements IAuthController {
       handleErrorResponse(req, res, error)
     }
   }
-
+  //controller for reseting the password
+  //giving token as parameter
   async resetPassword(req: Request, res: Response): Promise<void> {
     try {
       const validatedData = resetPasswordValidationSchema.parse(req.body)
