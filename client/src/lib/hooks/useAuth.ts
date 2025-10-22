@@ -1,16 +1,26 @@
-import { useQuery, useMutation } from '@tanstack/react-query'
-import { authService } from '@/services/auth/auth.service'
+import { useMutation } from '@tanstack/react-query'
+import { signup, sendOtp, verifyOtp } from '@/services/auth/auth.service'
+import { RegisterFormData } from '../schemas/registerSchema'
 
-export const useAuth = () => {
-  const loginMutation = useMutation({
-    mutationFn: authService.login,
+export const useSignup = () => {
+  return useMutation({
+    mutationFn: async (payload: RegisterFormData) => {
+      return await signup(payload)
+    },
   })
+}
 
-  const { data: profile, isLoading: profileLoading } = useQuery({
-    queryKey: ['profile'],
-    queryFn: authService.getProfile,
-    enabled: false, // only fetch when logged in
+// Send OTP hook
+export const useSendOtp = () => {
+  return useMutation({
+    mutationFn: (email: string) => sendOtp(email),
   })
+}
 
-  return { loginMutation, profile, profileLoading }
+// Verify OTP hook
+export const useVerifyOtp = () => {
+  return useMutation({
+    mutationFn: (data: { email: string; otp: string }) =>
+      verifyOtp(data.email, data.otp),
+  })
 }

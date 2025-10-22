@@ -8,6 +8,9 @@ export class AuthRoutes extends BaseRoute {
   }
 
   protected initializeRoutes(): void {
+    this.router.get('/test', (req: Request, res: Response) => {
+      console.log('working')
+    })
     this.router.post('/send-otp', (req: Request, res: Response) => {
       authController.sendOtpEmail(req, res)
     })

@@ -17,7 +17,8 @@ import { Button } from '@/components/ui/button'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { otpSchema, type OtpFormData } from '@/lib/schemas/otpSchema'
-import { customerService } from '@/services/customer.service'
+//import { customerService } from '@/services/customer.service'
+import { useSendOtp, useVerifyOtp } from '@/lib/hooks/useAuth'
 import toast from 'react-hot-toast'
 
 type OTPModalProps = {
@@ -30,7 +31,8 @@ type OTPModalProps = {
 export function OTPModal({ open, setOpen, onVerified, data }: OTPModalProps) {
   const RESEND_DELAY = 120
   const [counter, setCounter] = React.useState(RESEND_DELAY)
-
+  const sendOtpMutation = useSendOtp()
+  const verifyOtpMutation = useVerifyOtp()
   React.useEffect(() => {
     if (counter <= 0) return
     const interval = setInterval(() => {
@@ -46,11 +48,30 @@ export function OTPModal({ open, setOpen, onVerified, data }: OTPModalProps) {
     const s = (seconds % 60).toString().padStart(2, '0')
     return `${m}:${s}`
   }
+  React.useEffect(() => {
+    if (!open || !data?.email) return
+
+    const sendOtp = async () => {
+      try {
+        await sendOtpMutation.mutateAsync(data.email)
+        setCounter(RESEND_DELAY)
+        toast.success('OTP sent successfully!')
+      } catch (err) {
+        console.error('Failed to send OTP', err)
+        toast.error('Failed to send OTP.')
+      }
+    }
+
+    sendOtp()
+  }, [open, data?.email])
 
   const handleResend = async () => {
     try {
-      await customerService.sendOtp(data.email)
+      // await customerService.sendOtp(data.email)
+      // setCounter(RESEND_DELAY)
+      await sendOtpMutation.mutateAsync(data.email)
       setCounter(RESEND_DELAY)
+
       toast.success('OTP resent successfully!')
       //alert('OTP resent successfully!')
     } catch (err) {
@@ -75,13 +96,17 @@ export function OTPModal({ open, setOpen, onVerified, data }: OTPModalProps) {
         alert('Email not available for OTP verification.')
         return
       }
-      const response = await customerService.verifyOtp(data.email, otpData.otp)
+      const response = await verifyOtpMutation.mutateAsync({
+        email: data.email,
+        otp: otpData.otp,
+      })
 
       if (response.success) {
-        console.log('OTP verified successfully')
+        toast.success('OTP Verified Successfully')
         setOpen(false)
         onVerified()
       } else {
+        toast.error('OTP Verification failed')
         console.error('OTP verification failed:', response.message)
         alert(response.message || 'OTP verification failed')
       }

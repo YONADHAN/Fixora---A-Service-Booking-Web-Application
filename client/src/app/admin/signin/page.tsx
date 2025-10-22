@@ -9,24 +9,22 @@ export default function AdminLoginPage() {
 
   const handleSubmit = async (data: LoginFormData) => {
     setFormData(data)
+    handleVerified()
     console.log('Form submitted:', data)
+    try {
+    } catch (error) {}
     // You can add login API call here later
   }
 
   const handleVerified = async () => {
     if (!formData) return
     console.log('User verified:', formData)
-    // Add verification logic or redirect here
   }
 
   return (
     <div className='flex flex-col items-center justify-center min-h-screen p-5 md:p-10'>
       <div className='w-full max-w-sm md:max-w-3xl'>
-        <LoginForm
-          role='admin'
-          onSubmit={handleSubmit}
-          onVerified={handleVerified}
-        />
+        <LoginForm role='admin' onSubmit={handleSubmit} />
       </div>
     </div>
   )

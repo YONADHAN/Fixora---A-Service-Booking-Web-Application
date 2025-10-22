@@ -22,11 +22,7 @@ export default function VendorLoginPage() {
   return (
     <div className='flex flex-col items-center justify-center min-h-screen p-5 md:p-10'>
       <div className='w-full max-w-sm md:max-w-3xl'>
-        <LoginForm
-          role='vendor'
-          onSubmit={handleSubmit}
-          onVerified={handleVerified}
-        />
+        <LoginForm role='vendor' onSubmit={handleSubmit} />
       </div>
     </div>
   )

@@ -13,10 +13,10 @@ export default function VendorLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
+    <section lang='en'>
       <Navbar role='vendor' isAuthenticated={true} />
       {children}
       <Footer />
-    </html>
+    </section>
   )
 }

@@ -13,10 +13,10 @@ export default function AdminLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
+    <section lang='en'>
       <Navbar role='admin' isAuthenticated={true} />
       {children}
       <Footer />
-    </html>
+    </section>
   )
 }

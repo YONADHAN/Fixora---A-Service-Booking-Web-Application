@@ -12,13 +12,12 @@ import { loginSchema, type LoginFormData } from '@/lib/schemas/loginSchema'
 interface LoginFormProps extends Omit<React.ComponentProps<'div'>, 'onSubmit'> {
   role: 'customer' | 'vendor' | 'admin'
   onSubmit: (data: LoginFormData) => Promise<void>
-  onVerified: () => Promise<void>
 }
 
 export function LoginForm({
   role,
   onSubmit,
-  onVerified,
+
   className,
   ...props
 }: LoginFormProps) {

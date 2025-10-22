@@ -13,10 +13,10 @@ export default function CustomerLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
+    <section lang='en'>
       <Navbar role='customer' isAuthenticated={true} />
       {children}
       <Footer />
-    </html>
+    </section>
   )
 }

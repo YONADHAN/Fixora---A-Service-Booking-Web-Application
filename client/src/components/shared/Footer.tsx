@@ -11,6 +11,11 @@ import {
 } from 'react-icons/fa'
 
 const Footer = () => {
+  const [year, setYear] = React.useState(2025) // default to any year
+
+  React.useEffect(() => {
+    setYear(new Date().getFullYear())
+  }, [])
   return (
     <footer className='bg-gray-900 text-gray-300 pt-10 pb-6 mt-10'>
       <div className='max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8'>
@@ -90,8 +95,11 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className='text-center text-xs text-gray-400 mt-8 border-t border-gray-700 pt-4'>
-        © {new Date().getFullYear()} Fixora. All rights reserved.
+      <div
+        className='text-center text-xs text-gray-400 mt-8 border-t border-gray-700 pt-4'
+        suppressHydrationWarning
+      >
+        © {year} Fixora. All rights reserved.
       </div>
     </footer>
   )
