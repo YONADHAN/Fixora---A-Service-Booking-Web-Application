@@ -76,7 +76,9 @@ export class AuthController implements IAuthController {
   async register(req: Request, res: Response): Promise<void> {
     try {
       const { role } = req.body as { role: keyof typeof userSchema }
+      //console.log('controll received ', req.body)
       const schema = userSchema[role]
+
       if (!schema) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
           success: false,
@@ -84,6 +86,7 @@ export class AuthController implements IAuthController {
         })
         return
       }
+      console.log('schema failed')
       const validatedData = schema.parse(req.body)
 
       await this._registerUserUseCase.execute(validatedData)
@@ -122,8 +125,10 @@ export class AuthController implements IAuthController {
         user.role
       )
 
-      const accessTokenName = `${user.role}_access_token`
-      const refreshTokenName = `${user.role}_refresh_token`
+      // const accessTokenName = `${user.role}_access_token`
+      // const refreshTokenName = `${user.role}_refresh_token`
+      const accessTokenName = `access_token`
+      const refreshTokenName = `refresh_token`
 
       setAuthCookies(
         res,
@@ -154,6 +159,7 @@ export class AuthController implements IAuthController {
         })
         return
       }
+
       await this._forgotPasswordUseCase.execute(validatedData)
 
       res.status(HTTP_STATUS.OK).json({

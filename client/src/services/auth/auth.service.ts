@@ -1,5 +1,5 @@
 import { authAxiosInstance } from '@/api/auth_axios'
-import { RegisterFormData } from '@/lib/schemas/registerSchema'
+import { RegisterPayload, LoginPayload } from '@/lib/schemas/registerSchema'
 
 export const testAuth = async () => {
   const response = await authAxiosInstance.get('/test')
@@ -16,7 +16,20 @@ export const verifyOtp = async (email: string, otp: string) => {
   return response.data
 }
 
-export const signup = async (payload: RegisterFormData) => {
+export const signup = async (payload: RegisterPayload) => {
   const response = await authAxiosInstance.post('/signup', payload)
   return response.data
+}
+
+export const signin = async (payload: LoginPayload) => {
+  const response = await authAxiosInstance.post('/signin', payload)
+  return response.data
+}
+
+export const forgotPassword = async (email: string, role: string) => {
+  const response = await authAxiosInstance.post('/forgot-password', {
+    email,
+    role,
+  })
+  return response
 }

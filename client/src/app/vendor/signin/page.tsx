@@ -1,22 +1,35 @@
 'use client'
 
-import { useState } from 'react'
 import { LoginForm } from '@/components/shared-ui/login/login-form'
 import type { LoginFormData } from '@/lib/schemas/loginSchema'
+import { useSignin } from '@/lib/hooks/useAuth'
+import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 export default function VendorLoginPage() {
-  const [formData, setFormData] = useState<LoginFormData | null>(null)
+  const signinMutation = useSignin()
+  const router = useRouter()
 
   const handleSubmit = async (data: LoginFormData) => {
-    setFormData(data)
-    console.log('Form submitted:', data)
-    // You can add login API call here later
-  }
+    try {
+      const response = await signinMutation.mutateAsync({
+        ...data,
+        role: 'vendor',
+      })
 
-  const handleVerified = async () => {
-    if (!formData) return
-    console.log('User verified:', formData)
-    // Add verification logic or redirect here
+      console.log('Form submitted:', data)
+      console.log('Login response:', response)
+
+      if (response.success) {
+        toast.success('Login successful!')
+        router.push('/vendor/dashboard')
+      } else {
+        toast.error(response.message || 'Login failed')
+      }
+    } catch (error: any) {
+      console.error('Login error:', error)
+      toast.error(error?.message || 'Something went wrong')
+    }
   }
 
   return (

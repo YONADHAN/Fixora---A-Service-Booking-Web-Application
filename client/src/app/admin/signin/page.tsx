@@ -1,24 +1,41 @@
 'use client'
 
-import { useState } from 'react'
 import { LoginForm } from '@/components/shared-ui/login/login-form'
 import type { LoginFormData } from '@/lib/schemas/loginSchema'
+import { useSignin } from '@/lib/hooks/useAuth'
+import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
+import { unknown } from 'zod'
 
-export default function AdminLoginPage() {
-  const [formData, setFormData] = useState<LoginFormData | null>(null)
+export default function CustomerLoginPage() {
+  const signinMutation = useSignin()
+  const router = useRouter()
 
   const handleSubmit = async (data: LoginFormData) => {
-    setFormData(data)
-    handleVerified()
-    console.log('Form submitted:', data)
     try {
-    } catch (error) {}
-    // You can add login API call here later
-  }
+      const response = await signinMutation.mutateAsync({
+        ...data,
+        role: 'admin',
+      })
 
-  const handleVerified = async () => {
-    if (!formData) return
-    console.log('User verified:', formData)
+      console.log('Form submitted:', data)
+      console.log('Login response:', response)
+
+      if (response.success) {
+        toast.success('Login successful!')
+        router.push('/admin/dashboard')
+      } else {
+        toast.error(response.message || 'Login failed')
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Login error:', error.message)
+        toast.error(error.message)
+      } else {
+        console.error('Unknown error:', error)
+        toast.error('Something went wrong')
+      }
+    }
   }
 
   return (
