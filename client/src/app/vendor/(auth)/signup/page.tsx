@@ -11,6 +11,7 @@ import {
 } from '@/lib/schemas/registerSchema'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import axios from 'axios'
 
 const defaultLocation = {
   lat: 9.9312,
@@ -33,11 +34,15 @@ export default function VendorSignupPage() {
       await sendOtpMutation.mutateAsync(data.email)
       setOtpOpen(true)
       toast.success('OTP sent successfully!')
-    } catch (error: any) {
-      if (error.response?.status === 409) {
-        toast.error('Failed to send otp.This email is already registered!')
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 409) {
+          toast.error('Failed to send OTP. This email is already registered!')
+        } else {
+          toast.error('Failed to send OTP. Please try again.')
+        }
       } else {
-        toast.error('Failed to send OTP. Please try again.')
+        toast.error('An unexpected error occurred.')
       }
     }
   }
@@ -46,14 +51,12 @@ export default function VendorSignupPage() {
     if (!formData) return
 
     try {
-      // ✅ Use the transform helper
       const payload = transformToPayload(formData, 'vendor')
 
       await signupMutation.mutateAsync(payload)
       toast.success('Signup successful!')
 
-      // Redirect to dashboard or login
-      router.push('/vendor/dashboard')
+      router.push('/vendor/signin')
     } catch (error) {
       toast.error('Failed to signup.')
       console.error(error)

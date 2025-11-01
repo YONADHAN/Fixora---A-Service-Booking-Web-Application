@@ -17,12 +17,14 @@ export default function AdminLoginPage() {
 
   const handleSubmit = async (data: LoginFormData) => {
     try {
+      const customizedData = { ...data, email: data.email.toLowerCase() }
       const response = await signinMutation.mutateAsync({
-        ...data,
+        ...customizedData,
         role: 'admin',
       })
 
       console.log('Form submitted:', data)
+      console.log('Customised Data', customizedData)
       console.log('Login response:', response)
 
       if (response.success) {
