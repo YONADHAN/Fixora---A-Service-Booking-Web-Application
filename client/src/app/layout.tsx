@@ -4,22 +4,16 @@ import { useState, useEffect } from 'react'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from 'react-hot-toast'
-import Navbar from '@/components/shared/Navbar'
-import Footer from '@/components/shared/Footer'
-import { usePathname } from 'next/navigation'
+
 import Providers from './provider'
+import StoreProvider from '@/store/StoreProvider'
+import ClientLayout from '@/components/layout/shared/ClientLayout'
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const pathname = usePathname()
-  const showSharedLayout =
-    !pathname.startsWith('/admin') &&
-    !pathname.startsWith('/vendor') &&
-    !pathname.startsWith('/customer')
-
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -27,7 +21,6 @@ export default function RootLayout({
   }, [])
 
   if (!mounted) {
-    // Render nothing on server to avoid mismatch
     return (
       <html lang='en'>
         <body />
@@ -38,21 +31,19 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
-        <Providers>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Toaster position='top-right' reverseOrder={false} />
-            {showSharedLayout && (
-              <Navbar role='customer' isAuthenticated={true} />
-            )}
-            <main>{children}</main>
-            {showSharedLayout && <Footer />}
-          </ThemeProvider>
-        </Providers>
+        <StoreProvider>
+          <Providers>
+            <ThemeProvider
+              attribute='class'
+              defaultTheme='system'
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Toaster position='top-right' reverseOrder={false} />
+              <ClientLayout>{children}</ClientLayout>
+            </ThemeProvider>
+          </Providers>
+        </StoreProvider>
       </body>
     </html>
   )

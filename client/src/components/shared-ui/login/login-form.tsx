@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema, type LoginFormData } from '@/lib/schemas/loginSchema'
-
+import Image from 'next/image'
+import Link from 'next/link'
 interface LoginFormProps extends Omit<React.ComponentProps<'div'>, 'onSubmit'> {
   role: 'customer' | 'vendor' | 'admin'
   onSubmit: (data: LoginFormData) => Promise<void>
@@ -75,12 +76,12 @@ export function LoginForm({
                   type='password'
                   {...register('password')}
                 />
-                <a
-                  href='#'
+                <Link
+                  href={`/${role ? role : 'customer'}/forgot-password`}
                   className='ml-auto text-sm underline-offset-2 hover:underline'
                 >
                   Forgot your password?
-                </a>
+                </Link>
                 {errors.password && (
                   <p className='text-sm text-red-500'>
                     {errors.password.message}
@@ -114,22 +115,23 @@ export function LoginForm({
               </div>
 
               {/* Footer link */}
-              <div className='text-center text-sm'>
-                Don&apos;t have an account?{' '}
-                <a href='#' className='underline underline-offset-4'>
-                  Sign up
-                </a>
-              </div>
+              {role !== 'admin' && (
+                <div className='text-center text-sm'>
+                  Don&apos;t have an account?{' '}
+                  <Link
+                    href={`/${role}/signup`}
+                    className='underline underline-offset-4'
+                  >
+                    Sign up
+                  </Link>
+                </div>
+              )}
             </div>
           </form>
 
           {/* Image Side */}
           <div className='bg-muted relative hidden md:block'>
-            <img
-              src='/admin/login.jpg'
-              alt='Image'
-              className='absolute inset-0 w-full h-full object-cover dark:brightness-[0.2] dark:grayscale'
-            />
+            <Image src={'/admin/login.jpg'} fill alt='signin' />
           </div>
         </CardContent>
       </Card>

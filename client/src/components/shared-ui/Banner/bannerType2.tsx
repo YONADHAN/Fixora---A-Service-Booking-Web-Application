@@ -27,7 +27,7 @@ interface BannerType1Props {
   bannerTitle: string
 }
 
-const BannerType1: React.FC<BannerType1Props> = ({ bannerTitle }) => {
+const BannerType2: React.FC<BannerType1Props> = ({ bannerTitle }) => {
   return (
     <div>
       <h1 className='text-xl font-bold m-2 text-center'>{bannerTitle}</h1>
@@ -44,4 +44,4 @@ const BannerType1: React.FC<BannerType1Props> = ({ bannerTitle }) => {
   )
 }
 
-export default BannerType1
+export default BannerType2

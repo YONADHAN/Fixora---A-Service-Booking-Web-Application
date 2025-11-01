@@ -34,6 +34,7 @@ export class VendorResetPasswordStrategy
       user.userId ?? '',
       token
     )
+
     if (!tokenValid) {
       throw new CustomError(
         ERROR_MESSAGES.INVALID_TOKEN,

@@ -226,7 +226,6 @@ export function OTPModal({ open, setOpen, onVerified, data }: OTPModalProps) {
   const sendOtpMutation = useSendOtp()
   const verifyOtpMutation = useVerifyOtp()
 
-  // ⏱ Counter logic
   React.useEffect(() => {
     if (counter <= 0) return
     const interval = setInterval(() => {

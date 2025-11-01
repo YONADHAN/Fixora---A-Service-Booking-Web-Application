@@ -12,6 +12,7 @@ import path from 'path'
 //routes
 import { AuthRoutes } from '../routes/auth_route'
 import { VendorRoutes } from '../routes/vendor_route'
+import { CustomerRoutes } from '../routes/customer_route'
 
 export class ExpressServer {
   private _app: Application
@@ -54,6 +55,7 @@ export class ExpressServer {
   private configureRoutes(): void {
     this._app.use('/api/v1/auth', new AuthRoutes().router)
     this._app.use('/api/v1/vendor', new VendorRoutes().router)
+    this._app.use('/api/v1/customer', new CustomerRoutes().router)
   }
   public getApp(): Application {
     return this._app

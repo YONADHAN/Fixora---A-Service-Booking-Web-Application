@@ -47,6 +47,7 @@ export const SUCCESS_MESSAGES = {
   PROFILE_UPDATED_SUCCESSFULLY: 'Profile updated successfully',
   UPDATED: 'Successfully Updated.',
   FILE_UPLOAD_SUCCESS: 'File upload successfully.',
+  USER_LOGOUT_SUCCESS: 'Logged out successfully.',
 }
 
 export const ERROR_MESSAGES = {

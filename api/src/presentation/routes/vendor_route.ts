@@ -18,5 +18,9 @@ export class VendorRoutes extends BaseRoute {
         vendorController.uploadVerificationDocument(req, res)
       }
     )
+
+    this.router.post('/logout', (req: Request, res: Response) => {
+      vendorController.logout(req, res)
+    })
   }
 }

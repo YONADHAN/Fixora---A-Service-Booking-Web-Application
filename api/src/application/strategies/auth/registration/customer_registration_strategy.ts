@@ -24,11 +24,14 @@ export class CustomerRegistrationStrategy
     @inject('IPasswordBcrypt')
     private _passwordBcrypt: IBcrypt
   ) {}
-
   async register(user: UserDTO): Promise<ICustomerEntity> {
     const { email, password } = user
 
-    const isEmailExisting = await this._userExistenceService.emailExists(email)
+    const normalizedEmail = email.toLowerCase()
+
+    const isEmailExisting = await this._userExistenceService.emailExists(
+      normalizedEmail
+    )
     if (isEmailExisting) {
       throw new CustomError(ERROR_MESSAGES.EMAIL_EXISTS, HTTP_STATUS.CONFLICT)
     }
@@ -39,12 +42,13 @@ export class CustomerRegistrationStrategy
         HTTP_STATUS.BAD_REQUEST
       )
     }
-    const hashedPassword = await this._passwordBcrypt.hash(password)
 
+    const hashedPassword = await this._passwordBcrypt.hash(password)
     const userId = generateUniqueId()
 
     return await this._customerRepository.save({
       ...user,
+      email: normalizedEmail,
       password: hashedPassword,
       userId,
     })

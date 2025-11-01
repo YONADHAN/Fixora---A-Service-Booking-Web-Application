@@ -65,3 +65,19 @@ export interface GoogleUserDTO {
   googleId: string
   role: 'customer' | 'vendor'
 }
+
+export interface VendorResponseDTO {
+  _id: string
+  name: string
+  email: string
+  role: string
+  phone: string
+}
+
+export interface CustomerResponseDTO {
+  _id: string
+  name: string
+  email: string
+  role: string
+  phone: string
+}

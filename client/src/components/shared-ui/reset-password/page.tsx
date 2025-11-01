@@ -2,8 +2,14 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-
-export default function ResetPassword() {
+type ResetPasswordProps = {
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
+  role: 'admin' | 'customer' | 'vendor'
+}
+export default function ResetPassword({
+  handleSubmit,
+  role,
+}: ResetPasswordProps) {
   return (
     <div className='flex min-h-screen flex-col items-center justify-center bg-gray-50 py-12 px-4 dark:bg-gray-950'>
       <div className='mx-auto w-full max-w-md space-y-8'>
@@ -16,7 +22,12 @@ export default function ResetPassword() {
           </p>
         </div>
 
-        <form className='space-y-6' action='#' method='POST'>
+        <form
+          className='space-y-6'
+          action='#'
+          method='POST'
+          onSubmit={handleSubmit}
+        >
           {/* New Password */}
           <div>
             <Label htmlFor='newPassword'>New Password</Label>
@@ -48,7 +59,7 @@ export default function ResetPassword() {
 
         <div className='flex justify-center'>
           <Link
-            href='/login'
+            href={`${role}/login`}
             className='text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50'
             prefetch={false}
           >

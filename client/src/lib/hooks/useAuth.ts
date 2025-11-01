@@ -6,8 +6,10 @@ import {
   verifyOtp,
   signin,
   forgotPassword,
+  resetPassword,
+  logout,
 } from '@/services/auth/auth.service'
-import { LoginPayload, RegisterPayload } from '../schemas/registerSchema' // ✅ Changed from RegisterFormData
+import { LoginPayload, RegisterPayload } from '../schemas/registerSchema'
 
 export const useSignup = () => {
   return useMutation({
@@ -44,5 +46,18 @@ export const useForgotPassword = () => {
   return useMutation({
     mutationFn: (data: { email: string; role: string }) =>
       forgotPassword(data.email, data.role),
+  })
+}
+
+export const useResetPassword = () => {
+  return useMutation({
+    mutationFn: (data: { password: string; token: string; role: string }) =>
+      resetPassword(data.password, data.token, data.role),
+  })
+}
+
+export const useLogout = () => {
+  return useMutation({
+    mutationFn: () => logout(),
   })
 }

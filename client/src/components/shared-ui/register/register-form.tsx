@@ -1,5 +1,6 @@
 'use client'
 import { cn } from '@/lib/utils'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -21,6 +22,7 @@ const MapSelector = dynamic(() => import('@/utils/helpers/MapSelector'), {
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import Link from 'next/link'
 
 // Location schema
 const locationSchema = z.object({
@@ -39,7 +41,6 @@ export const registerSchema = z.object({
   phone: z.string().regex(/^\d{10}$/, 'Phone must be 10 digits'),
   location: locationSchema,
   zipcode: z.string().min(5, 'Zip code must be at least 5 characters'),
-  // avatar: z.instanceof(File).optional(),
 })
 
 export type RegisterFormData = z.infer<typeof registerSchema>
@@ -86,7 +87,6 @@ export function RegisterForm({
 
   useEffect(() => setMounted(true), [])
 
-  // Update form when location is selected
   useEffect(() => {
     if (selectedLocation) {
       setValue('location', selectedLocation, { shouldValidate: true })
@@ -252,27 +252,6 @@ export function RegisterForm({
                 )}
               </div>
 
-              {/* Avatar Upload */}
-              {/* <div className='grid gap-2'>
-                <Label htmlFor='avatar'>Profile Picture (Optional)</Label>
-                <Input
-                  id='avatar'
-                  type='file'
-                  accept='image/*'
-                  onChange={(e) => {
-                    const file = e.target.files?.[0]
-                    if (file) {
-                      setValue('avatar', file, { shouldValidate: true })
-                    }
-                  }}
-                />
-                {errors.avatar && (
-                  <p className='text-sm text-red-500'>
-                    {errors.avatar.message}
-                  </p>
-                )}
-              </div> */}
-
               {/* Submit Button */}
               <Button type='submit' className='w-full' disabled={isSubmitting}>
                 {isSubmitting ? 'Registering...' : 'Register'}
@@ -307,19 +286,23 @@ export function RegisterForm({
               {/* Footer link */}
               <div className='text-center text-sm'>
                 Already have an account?{' '}
-                <a href='#' className='underline underline-offset-4'>
+                <Link
+                  href={`/${role}/signin`}
+                  className='underline underline-offset-4'
+                >
                   Sign in
-                </a>
+                </Link>
               </div>
             </div>
           </form>
 
           {/* Image side */}
           <div className='bg-muted relative hidden md:block'>
-            <img
-              src='/admin/login.jpg'
+            <Image
+              src={'/admin/login.jpg'}
               alt='Registration'
-              className='absolute inset-0 w-full h-full object-cover dark:brightness-[0.2] dark:grayscale'
+              fill
+              className='object-cover object-center rounded-lg'
             />
           </div>
         </CardContent>

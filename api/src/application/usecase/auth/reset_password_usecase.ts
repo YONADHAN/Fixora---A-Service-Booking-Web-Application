@@ -23,7 +23,9 @@ export class ResetPasswordUseCase implements IResetPasswordUseCase {
     role: 'admin' | 'vendor' | 'customer'
     token: string
   }): Promise<void> {
+    console.log('hello')
     const payload = this._tokenService.verifyResetToken(token)
+
     if (!payload?.email)
       throw new CustomError(
         ERROR_MESSAGES.INVALID_TOKEN,

@@ -29,6 +29,10 @@ import { IForgotPasswordUseCase } from '../../domain/useCaseInterfaces/auth/forg
 import { ForgotPasswordUseCase } from '../../application/usecase/auth/forgot_password_usecase'
 import { IResetPasswordUseCase } from '../../domain/useCaseInterfaces/auth/reset_password_usecase_interface'
 import { ResetPasswordUseCase } from '../../application/usecase/auth/reset_password_usecase'
+import { IBlacklistTokenUseCase } from '../../domain/useCaseInterfaces/auth/blacklist_token_usecase_interface'
+import { BlacklistTokenUseCase } from '../../application/usecase/auth/blacklist_token_usecase'
+import { IRevokeRefreshTokenUseCase } from '../../domain/useCaseInterfaces/auth/revoke_refresh_token_usecase'
+import { RevokeRefreshTokenUseCase } from '../../application/usecase/auth/revoke_refresh_token_usecase'
 //factory
 import { RegistrationStrategyFactory } from '../../application/factories/auth/registration/registration_strategy_factory'
 import { IRegistrationStrategyFactory } from '../../application/factories/auth/registration/registration_strategy_factory.interface'
@@ -95,6 +99,15 @@ export class UseCaseRegistry {
     container.register<IResetPasswordUseCase>('IResetPasswordUseCase', {
       useClass: ResetPasswordUseCase,
     })
+    container.register<IBlacklistTokenUseCase>('IBlacklistTokenUseCase', {
+      useClass: BlacklistTokenUseCase,
+    })
+    container.register<IRevokeRefreshTokenUseCase>(
+      'IRevokeRefreshTokenUseCase',
+      {
+        useClass: RevokeRefreshTokenUseCase,
+      }
+    )
     //security
     container.register<IBcrypt>('IPasswordBcrypt', {
       useClass: PasswordBcrypt,

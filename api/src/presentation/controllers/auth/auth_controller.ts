@@ -9,6 +9,7 @@ import {
   ERROR_MESSAGES,
   HTTP_STATUS,
   SUCCESS_MESSAGES,
+  TRole,
 } from '../../../shared/constants'
 
 import { handleErrorResponse } from '../../../shared/utils/error_handler'
@@ -17,13 +18,19 @@ import { userSchema } from './validations/user_signup_validation_schema'
 import { IRegisterUserUseCase } from '../../../domain/useCaseInterfaces/auth/register_usecase_interface'
 import { ILoginUserUseCase } from '../../../domain/useCaseInterfaces/auth/login_usecase_interface'
 import { LoginUserDTO } from '../../../application/dtos/user_dto'
-import { setAuthCookies } from '../../../shared/utils/cookie_helper'
+import {
+  clearAuthCookies,
+  setAuthCookies,
+} from '../../../shared/utils/cookie_helper'
 import { loginSchema } from './validations/user_login_validation_schema'
 import { IGenerateTokenUseCase } from '../../../domain/useCaseInterfaces/auth/generate_token_usecase_interface'
 import { forgotPasswordValidationSchema } from './validations/forgot_password_validation_schema'
 import { IForgotPasswordUseCase } from '../../../domain/useCaseInterfaces/auth/forgot_password_usecase_interface'
 import { resetPasswordValidationSchema } from './validations/reset_password_validation_schema'
 import { IResetPasswordUseCase } from '../../../domain/useCaseInterfaces/auth/reset_password_usecase_interface'
+import { IRevokeRefreshTokenUseCase } from '../../../domain/useCaseInterfaces/auth/revoke_refresh_token_usecase'
+import { IBlacklistTokenUseCase } from '../../../domain/useCaseInterfaces/auth/blacklist_token_usecase_interface'
+import { CustomRequest } from '../../middleware/auth_middleware'
 @injectable()
 export class AuthController implements IAuthController {
   constructor(
@@ -40,7 +47,11 @@ export class AuthController implements IAuthController {
     @inject('IForgotPasswordUseCase')
     private _forgotPasswordUseCase: IForgotPasswordUseCase,
     @inject('IResetPasswordUseCase')
-    private _resetPasswordUseCase: IResetPasswordUseCase
+    private _resetPasswordUseCase: IResetPasswordUseCase,
+    @inject('IRevokeRefreshTokenUseCase')
+    private _revokeRefreshTokenUseCase: IRevokeRefreshTokenUseCase,
+    @inject('IBlacklistTokenUseCase')
+    private _blacklistTokenUseCase: IBlacklistTokenUseCase
   ) {}
   // controller for sending otp to emails
   // giving email as parameter
@@ -76,7 +87,7 @@ export class AuthController implements IAuthController {
   async register(req: Request, res: Response): Promise<void> {
     try {
       const { role } = req.body as { role: keyof typeof userSchema }
-      //console.log('controll received ', req.body)
+
       const schema = userSchema[role]
 
       if (!schema) {
@@ -86,7 +97,7 @@ export class AuthController implements IAuthController {
         })
         return
       }
-      console.log('schema failed')
+      //console.log('schema failed')
       const validatedData = schema.parse(req.body)
 
       await this._registerUserUseCase.execute(validatedData)
@@ -125,10 +136,8 @@ export class AuthController implements IAuthController {
         user.role
       )
 
-      // const accessTokenName = `${user.role}_access_token`
-      // const refreshTokenName = `${user.role}_refresh_token`
-      const accessTokenName = `access_token`
-      const refreshTokenName = `refresh_token`
+      const accessTokenName = `${user.role}_access_token`
+      const refreshTokenName = `${user.role}_refresh_token`
 
       setAuthCookies(
         res,
@@ -181,6 +190,7 @@ export class AuthController implements IAuthController {
           message: ERROR_MESSAGES.VALIDATION_ERROR,
         })
       }
+
       await this._resetPasswordUseCase.execute(validatedData)
       res.status(HTTP_STATUS.OK).json({
         success: true,
@@ -190,6 +200,31 @@ export class AuthController implements IAuthController {
       handleErrorResponse(req, res, error)
     }
   }
+
+  async logout(req: Request, res: Response): Promise<void> {
+    try {
+      await this._blacklistTokenUseCase.execute(
+        (req as CustomRequest).user.access_token
+      )
+
+      await this._revokeRefreshTokenUseCase.execute(
+        (req as CustomRequest).user.refresh_token
+      )
+      console.log('revoking working')
+      const user = (req as CustomRequest).user
+      console.log('user fetched from request', user)
+      const accessTokenName = `${user.role}_access_token`
+      const refreshTokenName = `${user.role}_refresh_token`
+      clearAuthCookies(res, accessTokenName, refreshTokenName)
+      res
+        .status(HTTP_STATUS.OK)
+        .json({ success: true, message: SUCCESS_MESSAGES.USER_LOGOUT_SUCCESS })
+    } catch (error) {
+      handleErrorResponse(req, res, error)
+    }
+  }
+
+  async handleTokenRefresh(req: Request, res: Response): Promise<void> {}
 
   // async authenticateWithGoogle(req: Request, res: Response): Promise<void> {
   //   try {

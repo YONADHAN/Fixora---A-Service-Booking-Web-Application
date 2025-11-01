@@ -6,9 +6,13 @@ import Link from 'next/link'
 import { useState } from 'react'
 type ForgotPasswordProps = {
   handleSubmit: (email: string) => void | Promise<void>
+  role: string
 }
 
-export default function ForgotPassword({ handleSubmit }: ForgotPasswordProps) {
+export default function ForgotPassword({
+  handleSubmit,
+  role,
+}: ForgotPasswordProps) {
   const [email, setEmail] = useState('')
 
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,11 +57,11 @@ export default function ForgotPassword({ handleSubmit }: ForgotPasswordProps) {
         </form>
         <div className='flex justify-center'>
           <Link
-            href='/admin/login'
+            href={`/${role}/signin`}
             className='text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50'
             prefetch={false}
           >
-            Back to login
+            Back to Login
           </Link>
         </div>
       </div>

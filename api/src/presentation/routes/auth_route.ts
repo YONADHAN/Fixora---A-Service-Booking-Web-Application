@@ -8,9 +8,6 @@ export class AuthRoutes extends BaseRoute {
   }
 
   protected initializeRoutes(): void {
-    this.router.get('/test', (req: Request, res: Response) => {
-      console.log('working')
-    })
     this.router.post('/send-otp', (req: Request, res: Response) => {
       authController.sendOtpEmail(req, res)
     })
@@ -31,7 +28,12 @@ export class AuthRoutes extends BaseRoute {
     this.router.post('/reset-password', (req: Request, res: Response) => {
       authController.resetPassword(req, res)
     })
-
+    this.router.post('/logout', (req: Request, res: Response) => {
+      authController.logout(req, res)
+    })
+    this.router.post('/refresh-token', (req: Request, res: Response) => {
+      authController.handleTokenRefresh
+    })
     // this.router.post('/google-auth', (req: Request, res: Response) => {
     //   authController.authenticateWithGoogle(req, res)
     // })
