@@ -3,7 +3,7 @@
 import { LoginForm } from '@/components/shared-ui/login/login-form'
 import type { LoginFormData } from '@/lib/schemas/loginSchema'
 import { useSignin } from '@/lib/hooks/useAuth'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { useAppDispatch } from '@/store/store'
 import { customerLogin } from '@/store/slices/customer.slice'

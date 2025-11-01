@@ -3,13 +3,16 @@
 import { LoginForm } from '@/components/shared-ui/login/login-form'
 import type { LoginFormData } from '@/lib/schemas/loginSchema'
 import { useSignin } from '@/lib/hooks/useAuth'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { AxiosError } from 'axios'
+import { useAppDispatch } from '@/store/store'
+import { vendorLogin } from '@/store/slices/vendor.slice'
 
 export default function VendorLoginPage() {
   const signinMutation = useSignin()
   const router = useRouter()
+  const dispatch = useAppDispatch()
 
   const handleSubmit = async (data: LoginFormData) => {
     try {
@@ -22,6 +25,7 @@ export default function VendorLoginPage() {
       console.log('Login response:', response)
 
       if (response.success) {
+        dispatch(vendorLogin(response.user))
         toast.success('Login successful!')
         router.push('/vendor/dashboard')
       } else {

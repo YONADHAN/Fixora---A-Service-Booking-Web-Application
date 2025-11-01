@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
-import { Toaster } from 'react-hot-toast'
 
+import { Toaster } from 'sonner'
 import Providers from './provider'
 import StoreProvider from '@/store/StoreProvider'
 import ClientLayout from '@/components/layout/shared/ClientLayout'
@@ -39,7 +39,9 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <Toaster position='top-right' reverseOrder={false} />
+              {/* <Toaster position='top-right' reverseOrder={false} /> */}
+              <Toaster position='top-right' />
+
               <ClientLayout>{children}</ClientLayout>
             </ThemeProvider>
           </Providers>

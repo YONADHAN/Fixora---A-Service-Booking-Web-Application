@@ -9,7 +9,7 @@ import {
   RegisterFormData,
   transformToPayload,
 } from '@/lib/schemas/registerSchema'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
 const defaultLocation = {

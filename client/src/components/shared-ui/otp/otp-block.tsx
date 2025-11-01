@@ -18,7 +18,7 @@
 // import { zodResolver } from '@hookform/resolvers/zod'
 // import { otpSchema, type OtpFormData } from '@/lib/schemas/otpSchema'
 // import { useSendOtp, useVerifyOtp } from '@/lib/hooks/useAuth'
-// import toast from 'react-hot-toast'
+// import { toast } from "sonner";
 
 // type OTPModalProps = {
 //   open: boolean
@@ -211,7 +211,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { otpSchema, type OtpFormData } from '@/lib/schemas/otpSchema'
 import { useSendOtp, useVerifyOtp } from '@/lib/hooks/useAuth'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 type OTPModalProps = {
   open: boolean

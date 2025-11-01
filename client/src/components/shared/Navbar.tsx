@@ -24,7 +24,7 @@ import {
 import { ModeToggle } from '../ui/modeToggle'
 
 import { navData } from '../data/NavData'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 interface NavbarProps {
   role?: 'admin' | 'vendor' | 'customer'

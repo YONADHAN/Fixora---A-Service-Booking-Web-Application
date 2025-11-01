@@ -10,7 +10,7 @@ import {
   transformToPayload,
 } from '@/lib/schemas/registerSchema'
 import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import axios from 'axios'
 const defaultLocation = {
   lat: 9.9312,

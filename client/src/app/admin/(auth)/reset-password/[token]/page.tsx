@@ -1,6 +1,6 @@
 'use client'
 import ResetPassword from '@/components/shared-ui/reset-password/page'
-import toast from 'react-hot-toast'
+import { toast } from "sonner";t'
 import { useResetPassword } from '@/lib/hooks/useAuth'
 import { useParams } from 'next/navigation'
 import { AxiosError } from 'axios'

@@ -1,6 +1,7 @@
-import { axiosInstance } from '@/api/auth_axios'
+import { axiosInstance } from '@/api/interceptor'
 
+import { VENDOR_ROUTES } from '@/utils/constants/api.routes'
 export const vendorLogout = async () => {
-  const response = await axiosInstance.post('/vendor/logout')
+  const response = await axiosInstance.post(`${VENDOR_ROUTES.LOGOUT}`)
   return response
 }
