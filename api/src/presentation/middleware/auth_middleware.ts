@@ -1,141 +1,13 @@
-// //*                  🛠️ VerifyAuth Middleware
-
-// import { NextFunction, Request, Response } from 'express'
-// import { ERROR_MESSAGES, HTTP_STATUS } from '../../shared/constants'
-// import { JwtPayload } from 'jsonwebtoken'
-// import { JWTService } from '../../interfaceAdapters/services/jwt_service'
-// import { handleErrorResponse } from '../../shared/utils/error_handler'
-
-// const tokenService = new JWTService()
-
-// export interface CustomJwtPayload extends JwtPayload {
-//   userId: string
-//   email: string
-//   role: string
-//   access_token: string
-//   refresh_token: string
-// }
-
-// export interface CustomRequest extends Request {
-//   user: CustomJwtPayload
-// }
-
-// export const verifyAuth = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const token = extractToken(req)
-//     console.log('token', token)
-//     if (!token) {
-//       res.status(HTTP_STATUS.UNAUTHORIZED).json({
-//         success: false,
-//         message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
-//       })
-//       return
-//     }
-//     const user = tokenService.verifyAccessToken(
-//       token.access_token
-//     ) as CustomJwtPayload
-//     if (!user || !user.userId) {
-//       res.status(HTTP_STATUS.UNAUTHORIZED).json({
-//         message: ERROR_MESSAGES.TOKEN_EXPIRED,
-//       })
-//       return
-//     }
-//     ;(req as CustomRequest).user = {
-//       ...user,
-//       access_token: token.access_token,
-//       refresh_token: token.refresh_token,
-//     }
-//     next()
-//   } catch (error: unknown) {
-//     if (error instanceof Error && error.name === 'TokenExpiredError') {
-//       res.status(HTTP_STATUS.UNAUTHORIZED).json({
-//         message: ERROR_MESSAGES.TOKEN_EXPIRED,
-//       })
-//       return
-//     }
-//     res.status(HTTP_STATUS.UNAUTHORIZED).json({
-//       message: ERROR_MESSAGES.INVALID_TOKEN,
-//     })
-//     return
-//   }
-// }
-
-// //*                 🛠️ Extract Token Helper Fn
-
-// const extractToken = (
-//   req: Request
-// ): { access_token: string; refresh_token: string } | null => {
-//   //   const userType = req.path.split("/")[1];
-//   //   console.log('userTypee',userType)
-
-//   //   if (!userType) return null;
-
-//   return {
-//     access_token: req.cookies?.[`access_token`] ?? null,
-//     refresh_token: req.cookies?.[`refresh_token`] ?? null,
-//   }
-// }
-
-// //*                 🛠️ Authorize Role Middleware
-
-// export const authorizeRole = (allowedRoles: string[]) => {
-//   return (req: Request, res: Response, next: NextFunction) => {
-//     const user = (req as CustomRequest).user
-//     if (!user || !allowedRoles.includes(user.role)) {
-//       res.status(HTTP_STATUS.FORBIDDEN).json({
-//         success: false,
-//         message: ERROR_MESSAGES.NOT_ALLOWED,
-//         userRole: user ? user.role : 'none',
-//       })
-//       return
-//     }
-//     next()
-//   }
-// }
-
-// //*                 🛠️ Decode Token Middleware
-
-// export const decodeToken = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const token = extractToken(req)
-
-//     if (!token) {
-//       res.status(HTTP_STATUS.UNAUTHORIZED).json({
-//         message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
-//       })
-//       return
-//     }
-
-//     const user = tokenService.decodeAccessToken(token?.access_token)
-
-//     ;(req as CustomRequest).user = {
-//       userId: user?.userId,
-//       email: user?.email,
-//       role: user?.role,
-//       access_token: token.access_token,
-//       refresh_token: token.refresh_token,
-//     }
-//     next()
-//   } catch {}
-// }
-
 import { Request, Response, NextFunction } from 'express'
 import { JWTService } from '../../interfaceAdapters/services/jwt_service'
 import { JwtPayload } from 'jsonwebtoken'
 import { ERROR_MESSAGES, HTTP_STATUS } from '../../shared/constants'
 import { redisClient } from '../../interfaceAdapters/repositories/redis/redis.client'
+import { clearAuthCookies } from '../../shared/utils/cookie_helper'
 
 const tokenService = new JWTService()
 
-export interface CustomJwtPayload extends JwtPayload {
+export interface CustomJWTPayload extends JwtPayload {
   userId: string
   email: string
   role: string
@@ -144,7 +16,7 @@ export interface CustomJwtPayload extends JwtPayload {
 }
 
 export interface CustomRequest extends Request {
-  user: CustomJwtPayload
+  user: CustomJWTPayload
 }
 
 const roleMap: Record<string, string> = {
@@ -153,16 +25,17 @@ const roleMap: Record<string, string> = {
   vendor: 'vendor',
 }
 
-const extractToken = (req: Request) => {
-  const possibleRoles = ['customer', 'vendor', 'admin']
-  const foundRole = possibleRoles.find((role) =>
-    req.originalUrl.includes(`/api/v1/${role}`)
-  )
+const extractToken = (
+  req: Request
+): { access_token: string; refresh_token: string } | null => {
+  const basePath = req.baseUrl.split('/')
 
-  if (foundRole) {
+  const userType = roleMap[basePath[3]]
+
+  if (['customer', 'vendor', 'admin'].includes(userType)) {
     return {
-      access_token: req.cookies[`${foundRole}_access_token`] || null,
-      refresh_token: req.cookies[`${foundRole}_refresh_token`] || null,
+      access_token: req.cookies[`${userType}_access_token`] || null,
+      refresh_token: req.cookies[`${userType}_refresh_token`] || null,
     }
   }
 
@@ -182,6 +55,7 @@ export const verifyAuth = async (
 ): Promise<void> => {
   try {
     const token = extractToken(req)
+
     if (!token) {
       res
         .status(HTTP_STATUS.UNAUTHORIZED)
@@ -195,21 +69,23 @@ export const verifyAuth = async (
         .json({ message: ERROR_MESSAGES.TOKEN_BLACKLISTED })
       return
     }
+
     const user = tokenService.verifyAccessToken(
       token.access_token
-    ) as CustomJwtPayload
-    if (!user || !user.id) {
+    ) as CustomJWTPayload
+
+    if (!user || !user.userId) {
       res
         .status(HTTP_STATUS.UNAUTHORIZED)
         .json({ message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS })
       return
     }
+
     ;(req as CustomRequest).user = {
       ...user,
       access_token: token.access_token,
       refresh_token: token.refresh_token,
     }
-
     next()
   } catch (error) {
     console.log('token is invalid is worked', error)
@@ -227,6 +103,7 @@ export const decodeToken = async (
   next: NextFunction
 ) => {
   try {
+    console.log('entered the decode token')
     const token = extractToken(req)
     if (!token?.refresh_token) {
       console.log('no token for decode')
@@ -235,19 +112,29 @@ export const decodeToken = async (
         .json({ message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS })
       return
     }
-
+    console.log('got the refresh token')
     const user = tokenService.verifyRefreshToken(
       token?.refresh_token
-    ) as CustomJwtPayload
-
+    ) as CustomJWTPayload
+    console.log('got user data from verifying the refresh token', user)
     const newAccessToken = tokenService.generateAccessToken({
-      userId: user.id,
+      userId: user.userId,
       email: user.email,
       role: user.role,
     })
-
+    console.log('create new access token from the data', newAccessToken)
+    console.log(
+      'entering datas like this into customRequest',
+      JSON.stringify({
+        userId: user?.userId,
+        email: user?.email,
+        role: user?.role,
+        access_token: newAccessToken,
+        refresh_token: token.refresh_token,
+      })
+    )
     ;(req as CustomRequest).user = {
-      userId: user?.id,
+      userId: user?.userId,
       email: user?.email,
       role: user?.role,
       access_token: newAccessToken,
@@ -256,6 +143,17 @@ export const decodeToken = async (
     next()
   } catch (error) {
     console.log('failed to decode', error)
+    const basePath = req.baseUrl.split('/')
+    const role = basePath[3]
+
+    if (role) {
+      const accessTokenName = `${role}_access_token`
+      const refreshTokenName = `${role}_refresh_token`
+      clearAuthCookies(res, accessTokenName, refreshTokenName)
+    }
+    return res.status(HTTP_STATUS.UNAUTHORIZED).json({
+      message: ERROR_MESSAGES.INVALID_TOKEN,
+    })
   }
 }
 
@@ -264,9 +162,11 @@ export const authorizeRole = (allowedRoles: string[]) => {
     const user = (req as CustomRequest).user
     if (!user || !allowedRoles.includes(user.role)) {
       console.log('this role is not allowed')
-      res
-        .status(HTTP_STATUS.FORBIDDEN)
-        .json({ message: ERROR_MESSAGES.NOT_ALLOWED })
+      res.status(HTTP_STATUS.FORBIDDEN).json({
+        message: ERROR_MESSAGES.NOT_ALLOWED,
+        user: user ? user.role : '',
+      })
+
       return
     }
     next()

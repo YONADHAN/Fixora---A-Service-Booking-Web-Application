@@ -26,9 +26,11 @@ export class AdminController implements IAdminController {
       await this._blacklistTokenUseCase.execute(
         (req as CustomRequest).user.access_token
       )
+
       await this._revokeRefreshTokenUseCase.execute(
         (req as CustomRequest).user.refresh_token
       )
+
       const user = (req as CustomRequest).user
       const accessTokenName = `${user.role}_access_token`
       const refreshTokenName = `${user.role}_refresh_token`

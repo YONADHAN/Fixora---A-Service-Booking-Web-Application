@@ -80,7 +80,7 @@ export default function Navbar({
       }
 
       toast.success(res?.data?.message || 'Logged out successfully')
-      router.push('/login')
+      router.push(`/${role}/sigin`)
     } catch (error) {
       toast.error('Logout failed')
       console.error(error)
@@ -153,13 +153,13 @@ export default function Navbar({
                     <>
                       <Button
                         variant='outline'
-                        onClick={() => router.push('/login')}
+                        onClick={() => router.push(`/${role}/signin`)}
                         className='w-full'
                       >
                         Login
                       </Button>
                       <Button
-                        onClick={() => router.push('/signup')}
+                        onClick={() => router.push(`/${role}/signup`)}
                         className='w-full'
                       >
                         Sign Up
@@ -255,13 +255,13 @@ export default function Navbar({
             <>
               <Button
                 variant='outline'
-                onClick={() => router.push('/login')}
+                onClick={() => router.push(`/${role}/signin`)}
                 className='hidden sm:flex'
               >
                 Login
               </Button>
               <Button
-                onClick={() => router.push('/signup')}
+                onClick={() => router.push(`/${role}/signup`)}
                 className='hidden sm:flex'
               >
                 Sign Up

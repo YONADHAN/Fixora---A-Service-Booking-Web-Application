@@ -33,7 +33,7 @@ const handleLogout = (role: string) => {
   }
 }
 let isRefreshing = false
-let refreshSubscribers: ((token?: string) => void)[]
+let refreshSubscribers: ((token?: string) => void)[] = []
 
 function onRefreshed(token?: string) {
   refreshSubscribers.forEach((callback) => callback(token))

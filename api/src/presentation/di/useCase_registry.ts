@@ -33,6 +33,8 @@ import { IBlacklistTokenUseCase } from '../../domain/useCaseInterfaces/auth/blac
 import { BlacklistTokenUseCase } from '../../application/usecase/auth/blacklist_token_usecase'
 import { IRevokeRefreshTokenUseCase } from '../../domain/useCaseInterfaces/auth/revoke_refresh_token_usecase'
 import { RevokeRefreshTokenUseCase } from '../../application/usecase/auth/revoke_refresh_token_usecase'
+import { RefreshTokenUseCase } from '../../application/usecase/auth/refresh_token_usecase'
+import { IRefreshTokenUseCase } from '../../domain/useCaseInterfaces/auth/refresh_token_usecase_interface'
 //factory
 import { RegistrationStrategyFactory } from '../../application/factories/auth/registration/registration_strategy_factory'
 import { IRegistrationStrategyFactory } from '../../application/factories/auth/registration/registration_strategy_factory.interface'
@@ -108,6 +110,10 @@ export class UseCaseRegistry {
         useClass: RevokeRefreshTokenUseCase,
       }
     )
+
+    container.register<IRefreshTokenUseCase>('IRefreshTokenUseCase', {
+      useClass: RefreshTokenUseCase,
+    })
     //security
     container.register<IBcrypt>('IPasswordBcrypt', {
       useClass: PasswordBcrypt,

@@ -21,6 +21,7 @@ import { LoginUserDTO } from '../../../application/dtos/user_dto'
 import {
   clearAuthCookies,
   setAuthCookies,
+  updateCookieWithAccessToken,
 } from '../../../shared/utils/cookie_helper'
 import { loginSchema } from './validations/user_login_validation_schema'
 import { IGenerateTokenUseCase } from '../../../domain/useCaseInterfaces/auth/generate_token_usecase_interface'
@@ -30,6 +31,8 @@ import { resetPasswordValidationSchema } from './validations/reset_password_vali
 import { IResetPasswordUseCase } from '../../../domain/useCaseInterfaces/auth/reset_password_usecase_interface'
 import { IRevokeRefreshTokenUseCase } from '../../../domain/useCaseInterfaces/auth/revoke_refresh_token_usecase'
 import { IBlacklistTokenUseCase } from '../../../domain/useCaseInterfaces/auth/blacklist_token_usecase_interface'
+
+import { IRefreshTokenUseCase } from '../../../domain/useCaseInterfaces/auth/refresh_token_usecase_interface'
 import { CustomRequest } from '../../middleware/auth_middleware'
 @injectable()
 export class AuthController implements IAuthController {
@@ -51,7 +54,9 @@ export class AuthController implements IAuthController {
     @inject('IRevokeRefreshTokenUseCase')
     private _revokeRefreshTokenUseCase: IRevokeRefreshTokenUseCase,
     @inject('IBlacklistTokenUseCase')
-    private _blacklistTokenUseCase: IBlacklistTokenUseCase
+    private _blacklistTokenUseCase: IBlacklistTokenUseCase,
+    @inject('IRefreshTokenUseCase')
+    private _refreshTokenUseCase: IRefreshTokenUseCase
   ) {}
   // controller for sending otp to emails
   // giving email as parameter
@@ -224,7 +229,26 @@ export class AuthController implements IAuthController {
     }
   }
 
-  async handleTokenRefresh(req: Request, res: Response): Promise<void> {}
+  async handleTokenRefresh(req: Request, res: Response): Promise<void> {
+    try {
+      // console.log('entered route')
+      const token = (req as CustomRequest).user.refresh_token
+      // console.log('token in handleTokenRefresh', token)
+      const newToken = this._refreshTokenUseCase.execute(token)
+      //console.log('new token was created from refresh token usecase', newToken)
+      const access_token_name = `${newToken.role}_access_token`
+      //console.log('created access_token_name')
+      updateCookieWithAccessToken(res, newToken.accessToken, access_token_name)
+      //console.log('Updated cookies with new access token')
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.REFRESH_TOKEN_REFRESHED_SUCCESS,
+        token: newToken.accessToken,
+      })
+    } catch (error) {
+      handleErrorResponse(req, res, error)
+    }
+  }
 
   // async authenticateWithGoogle(req: Request, res: Response): Promise<void> {
   //   try {

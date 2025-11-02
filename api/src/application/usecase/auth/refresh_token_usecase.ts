@@ -9,13 +9,21 @@ import { JwtPayload } from 'jsonwebtoken'
 export class RefreshTokenUseCase implements IRefreshTokenUseCase {
   constructor(@inject('ITokenService') private _tokenService: ITokenService) {}
   execute(refreshToken: string): { role: string; accessToken: string } {
+    // console.log('entereed the refresh token usecase')
     const payload = this._tokenService.verifyRefreshToken(refreshToken)
+    // console.log('payload is fetched', payload)
+    // if (!payload) {
+    //   console.log('We need to write the clear cookie logic here')
+    // }
     if (!payload) {
       throw new CustomError(
         ERROR_MESSAGES.INVALID_TOKEN,
         HTTP_STATUS.BAD_REQUEST
       )
     }
+    // console.log(
+    //   'refresh token is not invalid so access token is created and returned'
+    // )
     return {
       role: (payload as JwtPayload).role,
       accessToken: this._tokenService.generateAccessToken({

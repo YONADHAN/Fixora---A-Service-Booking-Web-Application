@@ -48,6 +48,7 @@ export const SUCCESS_MESSAGES = {
   UPDATED: 'Successfully Updated.',
   FILE_UPLOAD_SUCCESS: 'File upload successfully.',
   USER_LOGOUT_SUCCESS: 'Logged out successfully.',
+  REFRESH_TOKEN_REFRESHED_SUCCESS: 'Refresh Token Refreshed Successfully',
 }
 
 export const ERROR_MESSAGES = {

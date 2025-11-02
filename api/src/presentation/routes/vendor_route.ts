@@ -1,4 +1,9 @@
-import { vendorController } from '../di/resolver'
+import { authController, vendorController } from '../di/resolver'
+import {
+  authorizeRole,
+  decodeToken,
+  verifyAuth,
+} from '../middleware/auth_middleware'
 import { BaseRoute } from './base_route'
 import { Request, Response } from 'express'
 import multer from 'multer'
@@ -19,8 +24,21 @@ export class VendorRoutes extends BaseRoute {
       }
     )
 
-    this.router.post('/logout', (req: Request, res: Response) => {
-      vendorController.logout(req, res)
-    })
+    this.router.post(
+      '/logout',
+      verifyAuth,
+      authorizeRole(['vendor']),
+      (req: Request, res: Response) => {
+        vendorController.logout(req, res)
+      }
+    )
+
+    this.router.post(
+      '/refresh-token',
+      decodeToken,
+      (req: Request, res: Response) => {
+        authController.handleTokenRefresh(req, res)
+      }
+    )
   }
 }

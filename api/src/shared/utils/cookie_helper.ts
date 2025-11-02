@@ -32,14 +32,41 @@ export const updateCookieWithAccessToken = (
     httpOnly: true,
     secure: isProduction,
     sameSite: 'strict',
+    path: '/',
   })
 }
+
+// export const clearAuthCookies = (
+//   res: Response,
+//   accessTokenName: string,
+//   refreshTokenName: string
+// ) => {
+//   res.clearCookie(accessTokenName)
+//   res.clearCookie(refreshTokenName)
+// }
 
 export const clearAuthCookies = (
   res: Response,
   accessTokenName: string,
   refreshTokenName: string
 ) => {
-  res.clearCookie(accessTokenName)
-  res.clearCookie(refreshTokenName)
+  const isProduction = process.env.NODE_ENV === 'production'
+
+  res.clearCookie(accessTokenName, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'strict',
+    path: '/',
+  })
+  res.clearCookie(refreshTokenName, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'strict',
+    path: '/',
+  })
+
+  res.status(200).json({
+    success: true,
+    message: 'Logged out successfully',
+  })
 }
