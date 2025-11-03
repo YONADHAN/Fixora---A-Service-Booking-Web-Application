@@ -40,5 +40,23 @@ export class VendorRoutes extends BaseRoute {
         authController.handleTokenRefresh(req, res)
       }
     )
+
+    this.router.get(
+      '/profile-info',
+      verifyAuth,
+      authorizeRole(['vendor']),
+      (req: Request, res: Response) => {
+        vendorController.profileInfo(req, res)
+      }
+    )
+
+    this.router.patch(
+      '/update-profile-info',
+      verifyAuth,
+      authorizeRole(['vendor']),
+      (req: Request, res: Response) => {
+        vendorController.profileUpdate(req, res)
+      }
+    )
   }
 }

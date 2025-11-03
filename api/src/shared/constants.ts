@@ -44,6 +44,7 @@ export const SUCCESS_MESSAGES = {
   LOGOUT_SUCCESS: 'Logged out',
   EMAIL_SENT_SUCCESSFULLY: 'Email sent',
   APPROVAL_REQUEST_SENT: 'Approval request send to the admin',
+  PROFILE_FETCHED_SUCCESSFULLY: ' Profile fetched successfully',
   PROFILE_UPDATED_SUCCESSFULLY: 'Profile updated successfully',
   UPDATED: 'Successfully Updated.',
   FILE_UPLOAD_SUCCESS: 'File upload successfully.',

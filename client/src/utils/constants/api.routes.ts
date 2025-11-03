@@ -8,11 +8,15 @@ export const ADMIN_ROUTES = {
 export const VENDOR_ROUTES = {
   REFRESH_TOKEN: `${BASE_URL.VENDOR}/refresh-token`,
   LOGOUT: `${BASE_URL.VENDOR}/logout`,
+  GET_PROFILE_INFO: `${BASE_URL.VENDOR}/profile-info`,
+  UPDATE_PROFILE_INFO: `${BASE_URL.VENDOR}/update-profile-info`,
 }
 
 export const CUSTOMER_ROUTES = {
   REFRESH_TOKEN: `${BASE_URL.CUSTOMER}/refresh-token`,
   LOGOUT: `${BASE_URL.CUSTOMER}/logout`,
+  GET_PROFILE_INFO: `${BASE_URL.CUSTOMER}/profile-info`,
+  UPDATE_PROFILE_INFO: `${BASE_URL.CUSTOMER}/update-profile-info`,
 }
 
 export const AUTH_ROUTES = {

@@ -3,28 +3,39 @@
 import React from 'react'
 import ProfileCard from '@/components/shared-ui/Cards/ProfileCard'
 
-const CustomerProfilePage = () => {
-  const customerData = {
-    id: '7c2-472c-a0a2-bc834952bb4f',
-    name: 'Yonadhan MM',
-    email: 'yonadhanmm77@gmail.com',
-    role: 'Customer',
-    phone: '9349474463',
-    status: 'Active',
-    location: {
-      name: 'ചങ്ങനാശ്ശേരി റെയിൽവേ സ്റ്റേഷൻ',
-      displayName:
-        'ചങ്ങനാശ്ശേരി റെയിൽവേ സ്റ്റേഷൻ, Perunna, Changanassery, കോട്ടയം ജില്ല, Kerala, India',
-      zipCode: '686105',
-    },
-    createdAt: '2025-11-01T10:20:55.619Z',
-  }
+import { useVendorProfileInfo } from '@/lib/hooks/useVendor'
+
+const VendorProfilePage = () => {
+  const { data, isLoading, isError } = useVendorProfileInfo()
+
+  if (isLoading)
+    return (
+      <div className='min-h-screen flex items-center justify-center text-gray-500'>
+        Loading profile...
+      </div>
+    )
+
+  if (isError)
+    return (
+      <div className='min-h-screen flex items-center justify-center text-red-500'>
+        Failed to load profile.
+      </div>
+    )
+
+  if (!data)
+    return (
+      <div className='min-h-screen flex items-center justify-center text-gray-400'>
+        No profile data found.
+      </div>
+    )
+  console.log('The data from backend is ', data.data.data)
+  const user = data.data.data
 
   return (
     <div className='min-h-screen bg-gray-50 flex items-center justify-center p-6'>
-      <ProfileCard user={customerData} />
+      <ProfileCard user={user} />
     </div>
   )
 }
 
-export default CustomerProfilePage
+export default VendorProfilePage

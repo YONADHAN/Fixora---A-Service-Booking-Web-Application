@@ -1,34 +1,5 @@
 import { TRole } from '../../shared/constants'
 
-// export interface AdminDTO {
-//   userId?: string
-//   name: string
-//   email: string
-//   password?: string
-//   phone: string
-//   role: 'admin'
-// }
-
-// export interface CustomerDTO {
-//   userId?: string
-//   name: string
-//   email: string
-//   phone?: string
-//   password?: string
-//   googleId?: string
-//   role: 'customer'
-// }
-// export interface VendorDTO {
-//   userId?: string
-//   name: string
-//   email: string
-//   phone?: string
-//   password?: string
-//   googleId?: string
-//   role: 'vendor'
-// }
-// export type UserDTO = AdminDTO | CustomerDTO | VendorDTO
-
 export interface BaseUserDTO {
   userId?: string
   name: string
@@ -80,4 +51,24 @@ export interface CustomerResponseDTO {
   email: string
   role: string
   phone: string
+}
+
+export interface CustomerProfileInfoDTO {
+  userId: string
+  name: string
+  email: string
+  role: string
+  phone: string
+  status: string
+  location: { name: string; displayName: string; zipCode: string }
+}
+
+export interface VendorProfileInfoDTO {
+  userId: string
+  name: string
+  email: string
+  role: string
+  phone: string
+  status: string
+  location: { name: string; displayName: string; zipCode: string }
 }

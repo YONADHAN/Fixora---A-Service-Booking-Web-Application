@@ -12,6 +12,8 @@ import { clearAuthCookies } from '../../../shared/utils/cookie_helper'
 import { IBlacklistTokenUseCase } from '../../../domain/useCaseInterfaces/auth/blacklist_token_usecase_interface'
 import { IRevokeRefreshTokenUseCase } from '../../../domain/useCaseInterfaces/auth/revoke_refresh_token_usecase'
 import { IVendorController } from '../../../domain/controllerInterfaces/users/vendor-controller.interface'
+import { IGetProfileInfoUseCase } from '../../../domain/useCaseInterfaces/common/get_profile_info_usecase_interface'
+import { IProfileInfoUpdateUseCase } from '../../../domain/useCaseInterfaces/common/profile_info_update_usecase_interface'
 
 @injectable()
 export class VendorController implements IVendorController {
@@ -21,9 +23,13 @@ export class VendorController implements IVendorController {
     @inject('IBlacklistTokenUseCase')
     private _blacklistTokenUseCase: IBlacklistTokenUseCase,
     @inject('IRevokeRefreshTokenUseCase')
-    private _revokeRefreshTokenUseCase: IRevokeRefreshTokenUseCase
+    private _revokeRefreshTokenUseCase: IRevokeRefreshTokenUseCase,
+    @inject('IGetProfileInfoUseCase')
+    private _getProfileInfoUseCase: IGetProfileInfoUseCase,
+    @inject('IProfileInfoUpdateUseCase')
+    private _profileInfoUpdateUseCase: IProfileInfoUpdateUseCase
   ) {}
-  //controller for the vendor for uploading the identity proof
+
   async uploadVerificationDocument(req: Request, res: Response): Promise<void> {
     try {
       const file = req.file
@@ -64,6 +70,36 @@ export class VendorController implements IVendorController {
       const accessTokenName = `${user.role}_access_token`
       const refreshTokenName = `${user.role}_refresh_token`
       clearAuthCookies(res, accessTokenName, refreshTokenName)
+    } catch (error) {
+      handleErrorResponse(req, res, error)
+    }
+  }
+
+  async profileInfo(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as CustomRequest).user.userId
+      const role = (req as CustomRequest).user.role
+      const userData = await this._getProfileInfoUseCase.execute(role, userId)
+
+      res.status(HTTP_STATUS.OK).json({
+        message: SUCCESS_MESSAGES.PROFILE_FETCHED_SUCCESSFULLY,
+        data: userData,
+      })
+    } catch (error) {
+      handleErrorResponse(req, res, error)
+    }
+  }
+
+  async profileUpdate(req: Request, res: Response): Promise<void> {
+    try {
+      const data = req.body
+      const userId = (req as CustomRequest).user.userId
+      const role = (req as CustomRequest).user.role
+
+      await this._profileInfoUpdateUseCase.execute(role, data, userId)
+      res.status(HTTP_STATUS.OK).json({
+        message: SUCCESS_MESSAGES.PROFILE_UPDATED_SUCCESSFULLY,
+      })
     } catch (error) {
       handleErrorResponse(req, res, error)
     }

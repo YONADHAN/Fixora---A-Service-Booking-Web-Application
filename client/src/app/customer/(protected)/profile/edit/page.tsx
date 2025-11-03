@@ -3,61 +3,96 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
-import ProfileForm from '@/components/shared-ui/forms/profile-form/profile-form'
+import { toast } from 'sonner'
+import { AxiosError } from 'axios'
+import { queryClient } from '@/lib/queryClient'
 
-const EditProfilePage = () => {
+import {
+  useCustomerProfileInfo,
+  useCustomerProfileInfoUpdate,
+} from '@/lib/hooks/useCustomer'
+import { EditProfileForm } from '@/components/shared-ui/forms/profile-form/edit-profile-form'
+
+const EditCustomerProfilePage = () => {
   const router = useRouter()
+  const { data, isLoading, isError } = useCustomerProfileInfo()
+  const { mutate: updateProfile, isPending } = useCustomerProfileInfoUpdate()
 
-  const user = {
-    name: 'Yonadhan MM',
-    email: 'yonadhanmm77@gmail.com',
-    phone: '9349474463',
-    role: 'Customer',
-    status: 'Active',
-    googleId: '107512365880000987654',
-    avatarSeed: 'Yonadhan',
-    location: {
-      name: 'ചങ്ങനാശ്ശേരി റെയിൽവേ സ്റ്റേഷൻ',
-      displayName:
-        'ചങ്ങനാശ്ശേരി റെയിൽവേ സ്റ്റേഷൻ, Perunna, Changanassery, കോട്ടയം ജില്ല, Kerala, India',
-    },
+  const handleSubmit = (formData: any) => {
+    updateProfile(formData, {
+      onSuccess: () => {
+        toast.success('Profile updated successfully!')
+        queryClient.invalidateQueries({ queryKey: ['customerProfile'] })
+        router.push('/customer/profile')
+      },
+      onError: (err) => {
+        if (err instanceof AxiosError) {
+          toast.error(err.response?.data?.message || 'Something went wrong')
+        } else {
+          toast.error('Failed to update profile')
+        }
+      },
+    })
   }
 
-  const handleUpdate = (updatedData) => {
-    console.log('Updated profile:', updatedData)
-    alert('Profile updated successfully!')
+  const handleCancel = () => {
     router.push('/customer/profile')
   }
 
+  if (isLoading) {
+    return (
+      <div className='min-h-screen flex items-center justify-center text-gray-500'>
+        Loading profile...
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className='min-h-screen flex items-center justify-center text-red-500'>
+        Failed to load profile.
+      </div>
+    )
+  }
+
+  if (!data?.data?.data) {
+    return (
+      <div className='min-h-screen flex items-center justify-center text-gray-400'>
+        No profile data found.
+      </div>
+    )
+  }
+
+  const user = data.data.data
+
   return (
     <div className='min-h-screen bg-gray-100 flex items-center justify-center p-6'>
-      <div className='w-full max-w-2xl bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden'>
-        {/* Header Section */}
+      <div className='w-full max-w-3xl bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden'>
+        {/* Header */}
         <div className='bg-gradient-to-r from-slate-800 via-slate-700 to-gray-800 text-white p-6 flex items-center justify-between'>
-          <div className='flex items-center gap-3 justify-between w-full'>
-            <h2 className='text-lg md:text-xl font-semibold tracking-wide'>
-              Edit Profile
-            </h2>
-            {/* Back Button */}
-            <button
-              onClick={() => router.push('/customer/profile')}
-              className='flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-all backdrop-blur-sm'
-            >
-              <ArrowLeft size={16} />
-              Back to Profile
-            </button>
-          </div>
+          <h2 className='text-lg md:text-xl font-semibold tracking-wide'>
+            Edit Profile
+          </h2>
+          <button
+            onClick={handleCancel}
+            className='flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-all backdrop-blur-sm'
+          >
+            <ArrowLeft size={16} />
+            Back
+          </button>
         </div>
 
         {/* Form */}
-        <ProfileForm
-          initialData={user}
-          onSubmit={handleUpdate}
-          onCancel={() => router.push('/customer/profile')}
+        <EditProfileForm
+          user={user}
+          role='customer'
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+          isPending={isPending}
         />
       </div>
     </div>
   )
 }
 
-export default EditProfilePage
+export default EditCustomerProfilePage

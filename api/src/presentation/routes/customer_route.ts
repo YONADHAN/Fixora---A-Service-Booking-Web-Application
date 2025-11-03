@@ -29,5 +29,23 @@ export class CustomerRoutes extends BaseRoute {
         authController.handleTokenRefresh(req, res)
       }
     )
+
+    this.router.get(
+      '/profile-info',
+      verifyAuth,
+      authorizeRole(['customer']),
+      (req: Request, res: Response) => {
+        customerController.profileInfo(req, res)
+      }
+    )
+
+    this.router.patch(
+      '/update-profile-info',
+      verifyAuth,
+      authorizeRole(['customer']),
+      (req: Request, res: Response) => {
+        customerController.profileUpdate(req, res)
+      }
+    )
   }
 }

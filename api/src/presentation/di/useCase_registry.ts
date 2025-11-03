@@ -35,6 +35,10 @@ import { IRevokeRefreshTokenUseCase } from '../../domain/useCaseInterfaces/auth/
 import { RevokeRefreshTokenUseCase } from '../../application/usecase/auth/revoke_refresh_token_usecase'
 import { RefreshTokenUseCase } from '../../application/usecase/auth/refresh_token_usecase'
 import { IRefreshTokenUseCase } from '../../domain/useCaseInterfaces/auth/refresh_token_usecase_interface'
+import { IGetProfileInfoUseCase } from '../../domain/useCaseInterfaces/common/get_profile_info_usecase_interface'
+import { GetProfileInfoUseCase } from '../../application/usecase/common/get_profile_info_usecase'
+import { IProfileInfoUpdateUseCase } from '../../domain/useCaseInterfaces/common/profile_info_update_usecase_interface'
+import { ProfileInfoUpdateUseCase } from '../../application/usecase/common/profile_info_update_usecase'
 //factory
 import { RegistrationStrategyFactory } from '../../application/factories/auth/registration/registration_strategy_factory'
 import { IRegistrationStrategyFactory } from '../../application/factories/auth/registration/registration_strategy_factory.interface'
@@ -44,6 +48,10 @@ import { ForgotPasswordStrategyFactory } from '../../application/factories/auth/
 import { IForgotPasswordStrategyFactory } from '../../application/factories/auth/forgot_password/forgot_password_strategy_factory.interface'
 import { ResetPasswordStrategyFactory } from '../../application/factories/auth/reset_password/reset_password_strategy_factory'
 import { IResetPasswordStrategyFactory } from '../../application/factories/auth/reset_password/reset_password_strategy_factory.interface'
+import { IProfileFactory } from '../../application/factories/commonFeatures/profile/profile_factory.interface'
+import { ProfileFactory } from '../../application/factories/commonFeatures/profile/profile_factory'
+import { ProfileUpdateFactory } from '../../application/factories/commonFeatures/profile/profile_update_factory'
+import { IProfileUpdateFactory } from '../../application/factories/commonFeatures/profile/profile_update_factory.interface'
 //strategy
 import { CustomerRegistrationStrategy } from '../../application/strategies/auth/registration/customer_registration_strategy'
 import { ICustomerRegistrationStrategy } from '../../application/strategies/auth/registration/customer_registration_strategy.interface'
@@ -69,6 +77,16 @@ import { IVendorResetPasswordStrategy } from '../../application/strategies/auth/
 import { VendorResetPasswordStrategy } from '../../application/strategies/auth/reset_password/vendor_reset_password_strategy'
 import { ICustomerResetPasswordStrategy } from '../../application/strategies/auth/reset_password/customer_reset_password_strategy.interface'
 import { CustomerResetPasswordStrategy } from '../../application/strategies/auth/reset_password/customer_reset_password_strategy'
+
+import { ICustomerProfileStrategy } from '../../application/strategies/commonFeatures/profile/customer_profile_strategy.interface'
+import { CustomerProfileStrategy } from '../../application/strategies/commonFeatures/profile/customer_profile_strategy'
+import { IVendorProfileStrategy } from '../../application/strategies/commonFeatures/profile/vendor_profile_strategy.interface'
+import { VendorProfileStrategy } from '../../application/strategies/commonFeatures/profile/vendor_profile_strategy'
+
+import { ICustomerProfileUpdateStrategy } from '../../application/strategies/commonFeatures/profile/customer_profile_update_strategy.interface'
+import { CustomerProfileUpdateStrategy } from '../../application/strategies/commonFeatures/profile/customer_profile_update_strategy'
+import { IVendorProfileUpdateStrategy } from '../../application/strategies/commonFeatures/profile/vendor_profile_update_strategy.interface'
+import { VendorProfileUpdateStrategy } from '../../application/strategies/commonFeatures/profile/vendor_profile_update_strategy'
 export class UseCaseRegistry {
   static registerUseCases(): void {
     container.register<IOtpService>('IOtpService', {
@@ -113,6 +131,14 @@ export class UseCaseRegistry {
 
     container.register<IRefreshTokenUseCase>('IRefreshTokenUseCase', {
       useClass: RefreshTokenUseCase,
+    })
+
+    container.register<IGetProfileInfoUseCase>('IGetProfileInfoUseCase', {
+      useClass: GetProfileInfoUseCase,
+    })
+
+    container.register<IProfileInfoUpdateUseCase>('IProfileInfoUpdateUseCase', {
+      useClass: ProfileInfoUpdateUseCase,
     })
     //security
     container.register<IBcrypt>('IPasswordBcrypt', {
@@ -164,6 +190,13 @@ export class UseCaseRegistry {
       }
     )
 
+    container.register<IProfileFactory>('IProfileFactory', {
+      useClass: ProfileFactory,
+    })
+
+    container.register<IProfileUpdateFactory>('IProfileUpdateFactory', {
+      useClass: ProfileUpdateFactory,
+    })
     //strategy
     container.register<ICustomerRegistrationStrategy>(
       'ICustomerRegistrationStrategy',
@@ -233,6 +266,28 @@ export class UseCaseRegistry {
       'IAdminResetPasswordStrategy',
       {
         useClass: AdminResetPasswordStrategy,
+      }
+    )
+
+    container.register<IVendorProfileStrategy>('IVendorProfileStrategy', {
+      useClass: VendorProfileStrategy,
+    })
+
+    container.register<ICustomerProfileStrategy>('ICustomerProfileStrategy', {
+      useClass: CustomerProfileStrategy,
+    })
+
+    container.register<IVendorProfileUpdateStrategy>(
+      'IVendorProfileUpdateStrategy',
+      {
+        useClass: VendorProfileUpdateStrategy,
+      }
+    )
+
+    container.register<ICustomerProfileUpdateStrategy>(
+      'ICustomerProfileUpdateStrategy',
+      {
+        useClass: CustomerProfileUpdateStrategy,
       }
     )
   }
