@@ -3,6 +3,9 @@ import { BASE_URL } from './route'
 export const ADMIN_ROUTES = {
   REFRESH_TOKEN: `${BASE_URL.ADMIN}/refresh-token`,
   LOGOUT: `${BASE_URL.ADMIN}/logout`,
+  GET_ALL_CUSTOMERS: `${BASE_URL.ADMIN}/get-all-customers`,
+  GET_ALL_VENDORS: `${BASE_URL.ADMIN}/get-all-vendors`,
+  CHANGE_MY_USER_BLOCK_STATUS: `${BASE_URL.ADMIN}/change-my-user-block-status`,
 }
 
 export const VENDOR_ROUTES = {

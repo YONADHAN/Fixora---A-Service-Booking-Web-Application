@@ -27,7 +27,7 @@ export default function VendorLoginPage() {
       if (response.success) {
         dispatch(vendorLogin(response.user))
         toast.success('Login successful!')
-        router.push('/vendor/dashboard')
+        router.replace('/vendor/dashboard')
       } else {
         toast.error(response.message || 'Login failed')
       }

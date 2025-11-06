@@ -6,8 +6,8 @@ export const ROLES = {
   VENDOR: 'vendor',
 } as const
 
-export type statusTypes = 'active' | 'pending' | 'blocked' | 'approved'
-
+export type statusTypes = 'active' | 'blocked'
+export type verificationTypes = 'accepted' | 'rejected' | 'pending'
 export type TRole = 'customer' | 'admin' | 'vendor'
 
 export const HTTP_STATUS = {
@@ -50,11 +50,14 @@ export const SUCCESS_MESSAGES = {
   FILE_UPLOAD_SUCCESS: 'File upload successfully.',
   USER_LOGOUT_SUCCESS: 'Logged out successfully.',
   REFRESH_TOKEN_REFRESHED_SUCCESS: 'Refresh Token Refreshed Successfully',
+  USERS_FOUND: 'Users Found Successfully',
+  BLOCK_STATUS_OF_USER_CHANGED_SUCCESSFULLY:
+    'Block Status Changed Successfully.',
 }
 
 export const ERROR_MESSAGES = {
-  TOKEN_EXPIRED: 'Session expired login again',
-  TOKEN_BLACKLISTED: 'Session is no longer valid',
+  TOKEN_EXPIRED: 'Session expired, please log in again', //----------
+  TOKEN_BLACKLISTED: 'Token is blacklisted', //---------
   EMAIL_NOT_FOUND: 'Email not found',
   EMAIL_EXISTS: 'Email already registered',
   INVALID_ROLE: 'Access denied',
@@ -69,8 +72,8 @@ export const ERROR_MESSAGES = {
   PENDING_ADMIN_APPROVAL: 'Your request is not approved by admin',
   SERVER_ERROR: 'Something went wrong try again later',
   VALIDATION_ERROR: 'Check your inputs and try again',
-  UNAUTHORIZED_ACCESS: 'Not authorized',
-  BLOCKED: 'Your account is blocked',
+  UNAUTHORIZED_ACCESS: 'Unathorized access', //-----------------
+  BLOCKED: 'Your account has been blocked.', //----------------
   INVALID_CREDENTIALS: 'Wrong email or password',
   INVALID_OTP: 'Invalid or expired otp',
   USER_NOT_FOUND: 'User not found',
@@ -80,6 +83,8 @@ export const ERROR_MESSAGES = {
   UPDATE_FAILED: 'failed to update profile',
   FILE_NOT_FOUND: 'File not found.',
   PASSWORD_REQUIRED: 'Password required',
+  USERS_NOT_FOUND: 'Users not found',
+  STATUS_ALREADY_EXISTS: 'Status already exists.',
 }
 
 export const VERIFICATION_MAIL_CONTENT = (otp: string) => `

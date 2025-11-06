@@ -1,4 +1,4 @@
-import { TRole } from '../../shared/constants'
+import { statusTypes, TRole } from '../../shared/constants'
 
 export interface BaseUserDTO {
   userId?: string
@@ -71,4 +71,15 @@ export interface VendorProfileInfoDTO {
   phone: string
   status: string
   location: { name: string; displayName: string; zipCode: string }
+}
+
+export interface GetAllUsersDTO {
+  userId: string
+  name: string
+  email: string
+  role?: string
+  status: statusTypes | undefined
+  // isBlocked: boolean
+  createdAt: Date
+  updatedAt?: Date
 }

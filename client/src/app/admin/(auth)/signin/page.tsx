@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
       if (response.success) {
         dispatch(adminLogin(response.user))
         toast.success('Login successful!')
-        router.push('/admin/dashboard')
+        router.replace('/admin/dashboard')
       } else {
         toast.error(response.message || 'Login failed')
       }

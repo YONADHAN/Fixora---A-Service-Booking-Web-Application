@@ -57,6 +57,7 @@ export const verifyAuth = async (
     const token = extractToken(req)
 
     if (!token) {
+      console.log('Not token : VerifyAuth from AuthMiddleware')
       res
         .status(HTTP_STATUS.UNAUTHORIZED)
         .json({ message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS })
@@ -64,6 +65,7 @@ export const verifyAuth = async (
     }
 
     if (await isBlacklisted(token.access_token)) {
+      console.log('Token Blacklisted: VerifyAuth from AuthMiddleware')
       res
         .status(HTTP_STATUS.UNAUTHORIZED)
         .json({ message: ERROR_MESSAGES.TOKEN_BLACKLISTED })
@@ -75,6 +77,7 @@ export const verifyAuth = async (
     ) as CustomJWTPayload
 
     if (!user || !user.userId) {
+      console.log('Unauthorized access : VerifyAuth from AuthMiddleware')
       res
         .status(HTTP_STATUS.UNAUTHORIZED)
         .json({ message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS })
@@ -161,7 +164,9 @@ export const authorizeRole = (allowedRoles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = (req as CustomRequest).user
     if (!user || !allowedRoles.includes(user.role)) {
-      console.log('this role is not allowed')
+      console.log(
+        `${user.role}  is not allowed: AuthorizeRole from auth_middleware`
+      )
       res.status(HTTP_STATUS.FORBIDDEN).json({
         message: ERROR_MESSAGES.NOT_ALLOWED,
         user: user ? user.role : '',

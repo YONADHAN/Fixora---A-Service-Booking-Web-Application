@@ -8,16 +8,16 @@ export function middleware(request: NextRequest) {
   const vendorToken = request.cookies.get('vendor_access_token')
   const customerToken = request.cookies.get('customer_access_token')
 
-  // -----------------------------
-  // 🚫 Prevent logged-in users from visiting auth routes
-  // -----------------------------
   const isAuthRoute =
     pathname.startsWith('/admin/signin') ||
     pathname.startsWith('/admin/signup') ||
+    pathname.startsWith('/admin/forgot-password') ||
     pathname.startsWith('/vendor/signin') ||
     pathname.startsWith('/vendor/signup') ||
+    pathname.startsWith('/vendor/forgot-password') ||
     pathname.startsWith('/customer/signin') ||
-    pathname.startsWith('/customer/signup')
+    pathname.startsWith('/customer/signup') ||
+    pathname.startsWith('/customer/forgot-password')
 
   if (isAuthRoute) {
     if (adminToken) {
@@ -29,12 +29,11 @@ export function middleware(request: NextRequest) {
     if (customerToken) {
       return NextResponse.redirect(new URL('/customer/dashboard', request.url))
     }
+    const res = NextResponse.next()
+    res.headers.set('Cache-Control', 'no-store')
     return NextResponse.next()
   }
 
-  // -----------------------------
-  // 🔒 Protect Admin Pages
-  // -----------------------------
   if (pathname.startsWith('/admin')) {
     if (!adminToken) {
       return NextResponse.redirect(new URL('/admin/signin', request.url))
@@ -42,7 +41,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // 🔒 Protect Vendor Pages
   if (pathname.startsWith('/vendor')) {
     if (!vendorToken) {
       return NextResponse.redirect(new URL('/vendor/signin', request.url))
@@ -50,7 +48,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // 🔒 Protect Customer Pages
   if (pathname.startsWith('/customer')) {
     if (!customerToken) {
       return NextResponse.redirect(new URL('/customer/signin', request.url))
@@ -58,7 +55,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // ✅ Allow all other public routes
   return NextResponse.next()
 }
 

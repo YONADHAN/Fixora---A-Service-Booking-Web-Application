@@ -89,7 +89,7 @@ export function LoginForm({
                 )}
               </div>
 
-              {/* Submit Button */}
+              {/* Login Button */}
               <Button type='submit' className='w-full'>
                 Login
               </Button>

@@ -1,5 +1,13 @@
-import { FaHome, FaUser, FaUsers, FaStore, FaLock } from 'react-icons/fa'
+import {
+  FaHome,
+  FaUser,
+  FaUsers,
+  FaStore,
+  FaLock,
+  FaServicestack,
+} from 'react-icons/fa'
 import { BiSolidBell } from 'react-icons/bi'
+import { HiDocumentSearch } from 'react-icons/hi'
 import { User2 } from 'lucide-react'
 
 export interface NavItem {
@@ -23,8 +31,26 @@ export const navData: Record<'admin' | 'vendor' | 'customer', RoleMenus> = {
     topNav: [{ title: 'Dashboard', href: '/admin/dashboard' }],
     sideNav: [
       { title: 'Dashboard', href: '/admin/dashboard', icon: FaHome },
-      { title: 'Customers', href: '/admin/customers', icon: FaUsers },
-      { title: 'Vendors', href: '/admin/vendors', icon: FaStore },
+      {
+        title: 'Customers',
+        href: '/admin/dashboard/management/customer-management',
+        icon: FaUsers,
+      },
+      {
+        title: 'Vendors',
+        href: '/admin/dashboard/management/vendor-management',
+        icon: FaStore,
+      },
+      {
+        title: 'Requests',
+        href: '/admin/dashboard/management/request-management',
+        icon: HiDocumentSearch,
+      },
+      {
+        title: 'Service Categories',
+        href: '/admin/dashboard/service/categories',
+        icon: FaServicestack,
+      },
     ],
   },
 

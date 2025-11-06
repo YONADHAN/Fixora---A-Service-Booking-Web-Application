@@ -1,4 +1,6 @@
 import { authController, customerController } from '../di/resolver'
+import { blockMyUserMiddleware } from '../di/resolver'
+import { RequestHandler } from 'express'
 import {
   authorizeRole,
   decodeToken,
@@ -33,7 +35,9 @@ export class CustomerRoutes extends BaseRoute {
     this.router.get(
       '/profile-info',
       verifyAuth,
+      blockMyUserMiddleware.checkMyUserBlockStatus as RequestHandler,
       authorizeRole(['customer']),
+
       (req: Request, res: Response) => {
         customerController.profileInfo(req, res)
       }

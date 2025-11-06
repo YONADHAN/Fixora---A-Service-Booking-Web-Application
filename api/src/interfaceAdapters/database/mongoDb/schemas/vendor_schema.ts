@@ -34,6 +34,17 @@ export const vendorSchema = new Schema<IVendorModel>(
         uploadedAt: { type: Date, default: Date.now },
       },
     ],
+    isVerified: {
+      status: {
+        type: String,
+        default: 'Pending',
+        enum: ['accepted', 'rejected', 'pending'],
+      },
+      description: {
+        type: String,
+        default: '',
+      },
+    },
   },
   { timestamps: true }
 )

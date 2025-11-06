@@ -28,5 +28,31 @@ export class AdminRoutes extends BaseRoute {
         authController.handleTokenRefresh(req, res)
       }
     )
+
+    this.router.post(
+      '/get-all-customers',
+      verifyAuth,
+      authorizeRole(['admin']),
+      (req: Request, res: Response) => {
+        adminController.getAllCustomers(req, res)
+      }
+    )
+
+    this.router.post(
+      '/get-all-vendors',
+      verifyAuth,
+      authorizeRole(['admin']),
+      (req: Request, res: Response) => {
+        adminController.getAllVendors(req, res)
+      }
+    )
+    this.router.post(
+      '/change-my-user-block-status',
+      verifyAuth,
+      authorizeRole(['admin']),
+      (req: Request, res: Response) => {
+        adminController.changeMyUserBlockStatus(req, res)
+      }
+    )
   }
 }

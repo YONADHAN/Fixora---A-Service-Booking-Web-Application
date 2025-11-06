@@ -94,7 +94,7 @@ export default function Navbar({
         <div className='flex items-center gap-3'>
           {/* Mobile Menu - Always show on mobile */}
           <Sheet>
-            <SheetTrigger asChild className='md:hidden'>
+            <SheetTrigger asChild className='md:hidden px-2'>
               <Button variant='ghost' size='icon'>
                 <Menu className='h-6 w-6' />
               </Button>
@@ -174,7 +174,7 @@ export default function Navbar({
           {/* Desktop Sidebar - Only show if authenticated */}
           {isAuthenticated && (
             <Sheet>
-              <SheetTrigger asChild className='hidden md:block'>
+              <SheetTrigger asChild className='hidden md:block px-2'>
                 <Button variant='ghost' size='icon'>
                   <Menu className='h-6 w-6' />
                 </Button>

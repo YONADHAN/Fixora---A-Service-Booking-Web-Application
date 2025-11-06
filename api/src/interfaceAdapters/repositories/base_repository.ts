@@ -21,4 +21,24 @@ export class BaseRepository<T> implements IBaseRepository<T> {
       .findOneAndUpdate(filter, { $set: updateData }, { new: true })
       .lean() as Promise<T>
   }
+
+  async findAll(
+    page: number,
+    limit: number,
+    search: string = ''
+  ): Promise<T[]> {
+    const filter: FilterQuery<T> = search
+      ? ({
+          name: { $regex: search, $options: 'i' },
+        } as FilterQuery<T>)
+      : {}
+
+    const results = await this.model
+      .find(filter)
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .lean()
+
+    return results as unknown as T[]
+  }
 }

@@ -50,7 +50,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest: any = error.config
     const role = getRoleFromUrl(originalRequest.url)
     const message = error.response?.data?.message || ''
-
+    console.log('Entered the response interceptor')
     if (
       error.response?.status === StatusCodes.UNAUTHORIZED &&
       !originalRequest._retry
@@ -108,7 +108,18 @@ axiosInstance.interceptors.response.use(
         })
       })
     }
-
+    console.log('Passed first check')
+    if (
+      error.response?.status === StatusCodes.FORBIDDEN &&
+      (message.includes('Access denied') ||
+        message.includes('Token is blacklisted') ||
+        message.includes('Your account has been blocked.'))
+    ) {
+      toast.info(message || 'Access denied')
+      handleLogout(role)
+      return Promise.reject(error)
+    }
+    console.log('Passed second check')
     if (
       error.response?.status === StatusCodes.UNAUTHORIZED &&
       message.includes('Unathorized access') &&

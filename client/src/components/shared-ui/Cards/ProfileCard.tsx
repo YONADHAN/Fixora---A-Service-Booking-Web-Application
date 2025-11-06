@@ -15,8 +15,7 @@ const ProfileCard = ({ user }) => {
     <div className='w-full max-w-lg bg-white border border-gray-100 shadow-xl rounded-2xl overflow-hidden transition-all hover:shadow-2xl'>
       {/* Header */}
       <div className='relative bg-gradient-to-r from-slate-800 via-slate-700 to-gray-800 text-white p-6 flex flex-col items-center'>
-        {/* Avatar — you’ll customize later */}
-        <div className='relative w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-md'>
+        {/* <div className='relative w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-md'>
           <Image
             src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`}
             alt='avatar'
@@ -24,6 +23,9 @@ const ProfileCard = ({ user }) => {
             unoptimized
             className='object-cover'
           />
+        </div> */}
+        <div className='relative w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-md flex items-center justify-center bg-gray-100'>
+          <User className='w-16 h-16 text-gray-500' />
         </div>
 
         <h1 className='mt-4 text-2xl font-semibold'>{user.name}</h1>

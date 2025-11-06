@@ -1,5 +1,5 @@
 import { IUserEntity } from './user_entity'
-
+import { verificationTypes } from '../../shared/constants'
 export interface IVendorEntity extends IUserEntity {
   googleId?: string
   geoLocation?: {
@@ -17,4 +17,9 @@ export interface IVendorEntity extends IUserEntity {
     verified?: boolean
     uploadedAt?: Date
   }[]
+
+  isVerified?: {
+    status: verificationTypes
+    description: string
+  }
 }

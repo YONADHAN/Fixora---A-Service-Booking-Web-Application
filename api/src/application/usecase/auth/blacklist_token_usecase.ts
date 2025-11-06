@@ -13,13 +13,15 @@ export class BlacklistTokenUseCase implements IBlacklistTokenUseCase {
     const decoded = this.tokenService.verifyAccessToken(
       token
     ) as JwtPayload | null
+    console.log('decoded from the blacklist_token_usecase:', decoded)
     if (!decoded || typeof decoded !== 'object' || !('exp' in decoded)) {
       throw new Error('Invalid token: Missing or malformed payload')
     }
     console.log(
       'verification of the access token of the user happens in the blacklist usecase'
     )
-    const expiresIn = Math.floor(Date.now() / 1000)
+    const now = Math.floor(Date.now() / 1000)
+    const expiresIn = decoded.exp! - now
     console.log('setting expires in for the token', expiresIn)
     if (expiresIn > 0) {
       await redisClient.set(token, 'blacklisted', { EX: expiresIn })
