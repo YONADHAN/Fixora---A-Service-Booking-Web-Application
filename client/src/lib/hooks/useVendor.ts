@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
+  uploadVerificationDocuments,
   venderProfileInfoUpdate,
   vendorLogout,
   vendorProfileInfo,
@@ -10,16 +11,25 @@ export const useVendorLogout = () => {
     mutationFn: async () => vendorLogout(),
   })
 }
-
 export const useVendorProfileInfo = () => {
   return useQuery({
-    queryKey: ['customerProfile'],
+    queryKey: ['vendorProfile'],
     queryFn: async () => vendorProfileInfo(),
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+    gcTime: 0,
   })
 }
 
 export const useVenderProfileInfoUpdate = () => {
   return useMutation({
     mutationFn: (data: any) => venderProfileInfoUpdate(data),
+  })
+}
+
+export const useUploadVendorDocuments = () => {
+  return useMutation({
+    mutationFn: (files: File[]) => uploadVerificationDocuments(files),
   })
 }

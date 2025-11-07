@@ -1,8 +1,13 @@
 'use client'
+import { RootState } from '@/store/store'
 import React from 'react'
 import { FaTools, FaClock, FaCheckCircle, FaWallet } from 'react-icons/fa'
+import { useSelector } from 'react-redux'
 
 const DashboardPage = () => {
+  const customer = useSelector((state: RootState) => state.customer.customer)
+
+  const customerName = customer?.name || 'Customer'
   const stats = [
     {
       title: 'Active Requests',
@@ -52,7 +57,7 @@ const DashboardPage = () => {
       {/* Header */}
       <div className='flex items-center justify-between mb-8'>
         <h2 className='text-2xl font-semibold text-gray-800'>
-          Welcome back, Yonadhan 👋
+          Welcome back, {customerName}
         </h2>
         <button className='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition'>
           + Book New Service

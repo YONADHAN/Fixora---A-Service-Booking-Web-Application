@@ -6,7 +6,6 @@ import { useSignin } from '@/lib/hooks/useAuth'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { AxiosError } from 'axios'
-import { useAppDispatch } from '@/store/store'
 import { adminLogin } from '@/store/slices/admin.slice'
 import { useDispatch } from 'react-redux'
 
@@ -22,10 +21,6 @@ export default function AdminLoginPage() {
         ...customizedData,
         role: 'admin',
       })
-
-      console.log('Form submitted:', data)
-      console.log('Customised Data', customizedData)
-      console.log('Login response:', response)
 
       if (response.success) {
         dispatch(adminLogin(response.user))

@@ -13,6 +13,7 @@ export const VENDOR_ROUTES = {
   LOGOUT: `${BASE_URL.VENDOR}/logout`,
   GET_PROFILE_INFO: `${BASE_URL.VENDOR}/profile-info`,
   UPDATE_PROFILE_INFO: `${BASE_URL.VENDOR}/update-profile-info`,
+  UPLOAD_VERIFICATION_DOCUMENT: `${BASE_URL.VENDOR}/upload_verification_document`,
 }
 
 export const CUSTOMER_ROUTES = {

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import VendorLayout from '@/components/layout/VendorLayout'
 export const metadata: Metadata = {
-  title: 'Admin | Fixora',
-  description: 'Admin dashboard layout',
+  title: 'Vendor | Fixora',
+  description: 'Vendor pages of Fixora',
 }
 
 export default function AdminRootLayout({

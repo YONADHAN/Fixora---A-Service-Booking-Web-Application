@@ -14,6 +14,10 @@ export const useCustomerProfileInfo = () => {
   return useQuery({
     queryKey: ['customerProfile'],
     queryFn: async () => customerProfileInfo(),
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+    gcTime: 0,
   })
 }
 

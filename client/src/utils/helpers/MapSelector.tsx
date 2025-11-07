@@ -12,6 +12,7 @@ import L from 'leaflet'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Locate, Search, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 
 const markerIcon = new L.Icon({
   iconUrl: 'https://unpkg.com/leaflet@1.7/dist/images/marker-icon.png',
@@ -101,11 +102,11 @@ export default function MapSelector({
         setMapCenter([parseFloat(lat), parseFloat(lon)])
         onLocationSelect(parseFloat(lat), parseFloat(lon), name, display_name)
       } else {
-        alert('Location not found. Please try a different search term.')
+        toast.error('Location not found. Please try a different search term.')
       }
     } catch (err) {
       console.error('Search failed', err)
-      alert('Search failed. Please try again.')
+      toast.error('Search failed. Please try again.')
     } finally {
       setSearching(false)
     }
@@ -113,7 +114,7 @@ export default function MapSelector({
 
   const handleCurrentLocation = () => {
     if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser')
+      toast.info('Geolocation is not supported by your browser')
       return
     }
 
@@ -144,7 +145,7 @@ export default function MapSelector({
       },
       (err) => {
         console.error('Geolocation error', err)
-        alert(
+        toast.error(
           'Unable to retrieve your location. Please enable location services.'
         )
         setLocating(false)
@@ -209,7 +210,8 @@ export default function MapSelector({
         center={mapCenter}
         zoom={5}
         scrollWheelZoom={true}
-        className='flex-1 rounded-md border'
+        className='flex-1 rounded-md border '
+        style={{ zIndex: 0 }}
       >
         <TileLayer
           attribution='&copy; <a href="http://osm.org/">OpenStreetMap</a>'

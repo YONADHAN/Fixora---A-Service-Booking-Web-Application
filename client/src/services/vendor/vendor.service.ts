@@ -18,3 +18,21 @@ export const venderProfileInfoUpdate = async (data: any) => {
   )
   return response.data
 }
+
+export const uploadVerificationDocuments = async (files: File[]) => {
+  const formData = new FormData()
+  files.forEach((file) => {
+    formData.append('files', file)
+  })
+
+  const response = await axiosInstance.post(
+    VENDOR_ROUTES.UPLOAD_VERIFICATION_DOCUMENT,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  )
+  return response.data
+}

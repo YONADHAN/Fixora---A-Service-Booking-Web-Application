@@ -19,14 +19,10 @@ export default function CustomerLoginPage() {
         role: 'customer',
       })
 
-      console.log('Form submitted:', data)
-      console.log('Login response:', response)
-
       if (response.success) {
         dispatch(customerLogin(response.user))
         toast.success('Login successful!')
-        //saving the customer data in the redux stroe
-        console.log(response.user)
+
         router.replace('/customer/dashboard')
       } else {
         toast.error(response.message || 'Login failed')

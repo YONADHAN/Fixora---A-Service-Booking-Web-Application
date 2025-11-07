@@ -21,9 +21,6 @@ export default function VendorLoginPage() {
         role: 'vendor',
       })
 
-      console.log('Form submitted:', data)
-      console.log('Login response:', response)
-
       if (response.success) {
         dispatch(vendorLogin(response.user))
         toast.success('Login successful!')

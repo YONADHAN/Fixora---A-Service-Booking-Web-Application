@@ -1,6 +1,7 @@
 import type { LocationData } from './location.type'
 export type UserRoles = 'admin' | 'vendor' | 'client'
 export type VendorStatus = 'pending' | 'approved' | 'rejected' | 'blocked'
+export type verificationTypes = 'accepted' | 'rejected' | 'pending'
 export type CustomerStatus = 'active' | 'blocked'
 export type AdminStatus = 'active'
 
@@ -30,6 +31,14 @@ export interface IVendor extends User {
   googleId?: string
   status?: VendorStatus
   location?: LocationData | null
+  isVerified?: {
+    status?: verificationTypes
+    description?: string
+    reviewedBy?: {
+      adminId?: string | null
+      reviewedAt?: Date
+    }
+  }
 }
 
 export interface ILoginData {

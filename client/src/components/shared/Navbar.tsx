@@ -158,12 +158,14 @@ export default function Navbar({
                       >
                         Login
                       </Button>
-                      <Button
-                        onClick={() => router.push(`/${role}/signup`)}
-                        className='w-full'
-                      >
-                        Sign Up
-                      </Button>
+                      {role !== 'admin' && (
+                        <Button
+                          onClick={() => router.push(`/${role}/signup`)}
+                          className='w-full'
+                        >
+                          Sign Up
+                        </Button>
+                      )}
                     </>
                   )}
                 </div>
@@ -252,7 +254,7 @@ export default function Navbar({
               </Button>
             </>
           ) : (
-            <>
+            <div className='flex place-items-center gap-2'>
               <Button
                 variant='outline'
                 onClick={() => router.push(`/${role}/signin`)}
@@ -260,13 +262,15 @@ export default function Navbar({
               >
                 Login
               </Button>
-              <Button
-                onClick={() => router.push(`/${role}/signup`)}
-                className='hidden sm:flex'
-              >
-                Sign Up
-              </Button>
-            </>
+              {role !== 'admin' && (
+                <Button
+                  onClick={() => router.push(`/${role}/signup`)}
+                  className='px-3 py-1'
+                >
+                  Sign Up
+                </Button>
+              )}
+            </div>
           )}
         </div>
       </div>
